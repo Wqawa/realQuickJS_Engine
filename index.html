@@ -1,146 +1,1878 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RealQuickJS Engine</title>
-<meta name="description" content="RealQuickJS Engine — 写在这里的站点简介">
+<title>RealQuickJS Engine — 三引擎共存的 FNF 引擎</title>
+<meta name="description" content="RealQuickJS Engine：基于 Psych Engine 1.0.4 的 fork，通过 engine.txt 切换三套引擎侧，保留 Lua 兼容的同时内置 QuickJS-NG 真 JavaScript 运行时。">
+<meta name="theme-color" content="#f4f3ef">
+<meta property="og:title" content="RealQuickJS Engine">
+<meta property="og:description" content="三引擎共存 · Lua 兼容 · QuickJS-NG 真 JS 运行时">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111010'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='13' font-weight='700' fill='%23f4f3ef' text-anchor='middle'%3ERQ%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="progress" id="progress" aria-hidden="true"></div>
 
-<header class="site-header">
-  <a class="brand" href="#top">
-    <span class="brand-mark">RQ</span>
-    <span class="brand-name">RealQuickJS <em>Engine</em></span>
-  </a>
-  <nav class="nav">
-    <a href="#features">特性</a>
-    <a href="#download">下载</a>
-    <a href="#docs">文档</a>
-    <a href="#community">社区</a>
-  </nav>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#top" aria-label="RealQuickJS Engine 首页">
+      <span class="brand-mark" aria-hidden="true">RQ</span>
+      <span class="brand-text">RealQuickJS<span class="brand-slash">/</span>Engine</span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="#features" data-nav="features">特性</a>
+      <a href="#engines" data-nav="engines">引擎</a>
+      <a href="#notes" data-nav="notes">兼容</a>
+      <a href="#download" data-nav="download">下载</a>
+      <a href="#docs" data-nav="docs">文档</a>
+      <a href="#upstream" data-nav="upstream">上游</a>
+      <a href="#community" data-nav="community">参与</a>
+      <a href="#pillory" data-nav="pillory">处刑</a>
+      <a href="#archive" data-nav="archive">档案</a>
+    </nav>
+    <div class="topbar-actions">
+      <a class="ghost-btn" href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine" target="_blank" rel="noopener">
+        GitHub <span aria-hidden="true">↗</span>
+      </a>
+      <button class="invert-btn" id="theme-toggle" type="button" aria-label="切换黑白主题" aria-pressed="false">
+        <span class="invert-dot" aria-hidden="true"></span>
+        <span class="invert-label">INVERT</span>
+      </button>
+    </div>
+  </div>
 </header>
 
-<main>
-<section class="hero" id="top">
-  <div class="hero-glow" aria-hidden="true"></div>
-  <div class="hero-inner">
-    <p class="eyebrow">基于 Psych Engine · 三引擎共存</p>
-    <h1>RealQuickJS <span>Engine</span></h1>
-    <p class="lead">在这里写一句话介绍你的引擎。比如它是什么、给谁用、解决了什么问题。</p>
-    <p class="sub">在这里写第二行补充说明，也可以删掉这一段。</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#download">开始使用 <span aria-hidden="true">→</span></a>
-      <a class="btn btn-ghost" href="#docs">查看文档</a>
-    </div>
-    <div class="hero-stats">
-      <div><strong>3</strong><span>内置引擎</span></div>
-      <div><strong>Lua</strong><span>脚本兼容</span></div>
-      <div><strong>JS</strong><span>QuickJS-NG</span></div>
-    </div>
-  </div>
-</section>
+<main id="top">
 
-<section class="section" id="features">
-  <div class="wrap">
-    <h2 class="section-title">特性</h2>
-    <p class="section-sub">在这里写特性区的引导语，或者留空。</p>
-    <div class="cards">
-      <article class="card">
-        <div class="card-icon">01</div>
-        <h3>写特性标题</h3>
-        <p>写这个特性的两三句说明。保持短，别写成 changelog。</p>
-      </article>
-      <article class="card">
-        <div class="card-icon">02</div>
-        <h3>写特性标题</h3>
-        <p>写这个特性的两三句说明。</p>
-      </article>
-      <article class="card">
-        <div class="card-icon">03</div>
-        <h3>写特性标题</h3>
-        <p>写这个特性的两三句说明。</p>
-      </article>
-      <article class="card">
-        <div class="card-icon">04</div>
-        <h3>写特性标题</h3>
-        <p>写这个特性的两三句说明。</p>
-      </article>
-      <article class="card">
-        <div class="card-icon">05</div>
-        <h3>写特性标题</h3>
-        <p>写这个特性的两三句说明。</p>
-      </article>
-      <article class="card">
-        <div class="card-icon">06</div>
-        <h3>写特性标题</h3>
-        <p>写这个特性的两三句说明。</p>
-      </article>
+  <section class="hero">
+    <div class="hero-meta">
+      <span>PSYCH ENGINE 1.0.4 FORK</span>
+      <span>＋ PE 1.0.4 / PE 0.6.3</span>
+      <span class="hero-meta-right">HAXE · LIME · FLIXEL</span>
     </div>
-  </div>
-</section>
 
-<section class="section section-alt" id="download">
-  <div class="wrap">
-    <h2 class="section-title">下载</h2>
-    <p class="section-sub">这一块自动读取仓库的 Releases，发新版后网页会跟着更新。</p>
-    <div class="latest">
-      <div class="latest-head">
-        <span class="tag">最新版本</span>
-        <strong id="latest-name">正在读取…</strong>
-        <span id="latest-date" class="muted"></span>
+    <h1 class="hero-title">
+      <span class="line">REALQUICKJS</span>
+      <span class="line line-outline">ENGINE</span>
+    </h1>
+
+    <div class="hero-body">
+      <div class="hero-copy">
+        <p class="hero-lead">
+          让 0.6.3 / 0.7.3 的老 mod <em>不改一行</em> 就能跑 —
+          在保留 Lua 的基础上，真正跑起 JavaScript。
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-solid" href="#download">下载最新版 <span aria-hidden="true">↓</span></a>
+          <a class="btn btn-line" href="#docs">阅读文档 <span aria-hidden="true">→</span></a>
+        </div>
       </div>
-      <div id="latest-assets" class="assets">
-        <span class="muted">如果这里一直没内容，检查仓库有没有发布 Release。</span>
+      <div class="hero-aside">
+        <p class="hero-sub">
+          一个 exe，三套引擎侧。<code>engine.txt</code> 里写一个词，决定这次启动的是谁。
+        </p>
+        <div class="switcher" role="group" aria-label="engine.txt 切换演示">
+          <div class="switcher-bar"><span>engine.txt</span><span id="switcher-state">当前 · body</span></div>
+          <button class="switcher-row" type="button" data-engine="body" aria-pressed="true">
+            <span class="switcher-mark" aria-hidden="true"></span>
+            <span>body</span><small>本仓 fork · 默认</small>
+          </button>
+          <button class="switcher-row" type="button" data-engine="vanilla" aria-pressed="false">
+            <span class="switcher-mark" aria-hidden="true"></span>
+            <span>vanilla</span><small>原版 PE 1.0.4</small>
+          </button>
+          <button class="switcher-row" type="button" data-engine="pe063" aria-pressed="false">
+            <span class="switcher-mark" aria-hidden="true"></span>
+            <span>pe063</span><small>Psych 0.6.3</small>
+          </button>
+          <div class="switcher-foot" id="switcher-foot">点一行试试 — 重启后生效。</div>
+        </div>
       </div>
     </div>
-    <details class="history">
-      <summary>历史版本</summary>
-      <div id="release-list" class="release-list">
-        <span class="muted">正在读取…</span>
+
+    <dl class="specimen">
+      <div><dt>内置引擎</dt><dd>3</dd></div>
+      <div><dt>Lua 兼容</dt><dd>0.6.3 / 0.7.3</dd></div>
+      <div><dt>JS 运行时</dt><dd>QuickJS-NG</dd></div>
+      <div><dt>崩溃拦截</dt><dd>三侧共用</dd></div>
+    </dl>
+
+    <div class="hero-foot">
+      <span>SCROLL</span>
+      <span class="hero-foot-line" aria-hidden="true"></span>
+      <span>2026</span>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <span class="section-index">01</span>
+        <h2 class="section-title">特性</h2>
+        <p class="section-note">六件事，短说。</p>
+      </header>
+
+      <ol class="feature-list">
+        <li class="feature-row" data-reveal>
+          <span class="feature-num" aria-hidden="true">01</span>
+          <div class="feature-main">
+            <h3>三套引擎，一个可执行文件</h3>
+            <p>本体 fork、原版 Psych 1.0.4、Psych 0.6.3 三棵树并排放在同一个 exe 里。启动时读 <code>engine.txt</code> 分叉，源码、资产、mods 目录各自独立。</p>
+          </div>
+          <span class="feature-tag" aria-hidden="true">body / vanilla / pe063</span>
+        </li>
+        <li class="feature-row" data-reveal>
+          <span class="feature-num" aria-hidden="true">02</span>
+          <div class="feature-main">
+            <h3>老 mod 零改动</h3>
+            <p>目标写得很直白：0.6.3 / 0.7.3 时代的 mod 不改一行脚本、不换一次资源，拖进去就能跑。</p>
+          </div>
+          <span class="feature-tag" aria-hidden="true">0.6.3 → 1.0.4</span>
+        </li>
+        <li class="feature-row" data-reveal>
+          <span class="feature-num" aria-hidden="true">03</span>
+          <div class="feature-main">
+            <h3>真 JS，不是文字游戏</h3>
+            <p>内置 QuickJS-NG 运行时与宿主桥协议。不是把 <code>{</code> 替换成 <code>end</code> 就宣称支持 JavaScript 的那种做法。</p>
+          </div>
+          <span class="feature-tag" aria-hidden="true">quickjs-ng</span>
+        </li>
+        <li class="feature-row" data-reveal>
+          <span class="feature-num" aria-hidden="true">04</span>
+          <div class="feature-main">
+            <h3>按文件名伪造引擎版本</h3>
+            <p>有些 mod 的 Lua 里写死了 <code>if version == '0.6.3' then …</code>。给单个脚本加后缀，就能只让那一个脚本看到它想要的版本号。</p>
+          </div>
+          <span class="feature-tag" aria-hidden="true">%run_v_0.6.3</span>
+        </li>
+        <li class="feature-row" data-reveal>
+          <span class="feature-num" aria-hidden="true">05</span>
+          <div class="feature-main">
+            <h3>统一的崩溃屏</h3>
+            <p>三侧共用一个拦截器：先把错误和调用栈落盘到 <code>crash/</code>，再切进引擎内崩溃屏，可以退出，也可以直接回当前侧主菜单。</p>
+          </div>
+          <span class="feature-tag" aria-hidden="true">crash/</span>
+        </li>
+        <li class="feature-row" data-reveal>
+          <span class="feature-num" aria-hidden="true">06</span>
+          <div class="feature-main">
+            <h3>脚本互相隔离</h3>
+            <p>三棵树的 <code>Paths</code> 与 import 别名表彼此隔离，同名的 <code>scripts/</code> 不会串味，装了一堆老 mod 也不会互相顶掉。</p>
+          </div>
+          <span class="feature-tag" aria-hidden="true">isolation</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section-invert" id="engines">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <span class="section-index">02</span>
+        <h2 class="section-title">三引擎</h2>
+        <p class="section-note">Options → Switch Engine，选完写进 exe 旁边的 engine.txt 并退出。</p>
+      </header>
+
+      <div class="engine-table" role="table" aria-label="引擎对照表" data-reveal>
+        <div class="engine-row engine-head" role="row">
+          <span role="columnheader">engine.txt</span>
+          <span role="columnheader">侧</span>
+          <span role="columnheader">源码</span>
+          <span role="columnheader">资产</span>
+          <span role="columnheader">mod</span>
+        </div>
+        <div class="engine-row is-target" role="row" data-engine="body">
+          <span role="cell" class="engine-key">body<em>默认</em></span>
+          <span role="cell">本仓 fork</span>
+          <span role="cell" class="mono">source_body/body/</span>
+          <span role="cell" class="mono">assets/body/</span>
+          <span role="cell" class="mono">mods/body/</span>
+        </div>
+        <div class="engine-row" role="row" data-engine="vanilla">
+          <span role="cell" class="engine-key">vanilla</span>
+          <span role="cell">原版 PE 1.0.4</span>
+          <span role="cell" class="mono">source_vanilla/vanilla/</span>
+          <span role="cell" class="mono">assets/1.0.4/</span>
+          <span role="cell" class="mono">mods/1.0.4/</span>
+        </div>
+        <div class="engine-row" role="row" data-engine="pe063">
+          <span role="cell" class="engine-key">pe063</span>
+          <span role="cell">Psych Engine 0.6.3</span>
+          <span role="cell" class="mono">source_063/pe063/</span>
+          <span role="cell" class="mono">assets/0.6.3/</span>
+          <span role="cell" class="mono">mods/0.6.3/</span>
+        </div>
       </div>
-    </details>
-  </div>
-</section>
 
-<section class="section" id="docs">
-  <div class="wrap wrap-narrow">
-    <h2 class="section-title">文档</h2>
-    <p class="section-sub">写一句文档引导语。下面按钮换成你自己的文档地址。</p>
-    <div class="doc-grid">
-      <a class="doc-card" href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine" target="_blank" rel="noopener">
-        <strong>仓库与源码</strong>
-        <span>在 GitHub 上查看构建方式、兼容层说明和已有文档。</span>
-        <em>打开 →</em>
-      </a>
-      <a class="doc-card" href="#" id="doc-guide">
-        <strong>入门指南</strong>
-        <span>在这里放你的指南链接。还没写就先留 #。</span>
-        <em>打开 →</em>
-      </a>
+      <p class="engine-foot" data-reveal>
+        纯静态分发，没有安装器。解压，双击，然后在选项里挑一个引擎。
+      </p>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section section-alt" id="community">
-  <div class="wrap">
-    <h2 class="section-title">社区</h2>
-    <p class="section-sub">把下面的链接换成你自己的，或者删掉不用的卡片。</p>
-    <div class="community">
-      <a class="community-card" href="#" target="_blank" rel="noopener"><strong>Discord</strong><span>写邀请链接</span></a>
-      <a class="community-card" href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine" target="_blank" rel="noopener"><strong>GitHub</strong><span>源码与 issue</span></a>
-      <a class="community-card" href="#" target="_blank" rel="noopener"><strong>YouTube</strong><span>写频道链接</span></a>
+  <section class="section" id="notes">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <span class="section-index">03</span>
+        <h2 class="section-title">兼容细节</h2>
+        <p class="section-note">两个值得先知道的小机关。</p>
+      </header>
+
+      <div class="note-grid">
+        <article class="note" data-reveal>
+          <h3>只在命名里改版本</h3>
+          <p>把后缀塞进文件名，那个脚本读到的 <code>version</code> 就变了，其余脚本不受影响。</p>
+          <div class="codeblock">
+            <div class="codeblock-bar">
+              <span>mods/xxx/scripts/</span>
+              <button class="copy-btn" type="button" data-copy="legacy-thing(%run_v_0.6.3).lua">COPY</button>
+            </div>
+            <pre><code>legacy-thing<mark>(%run_v_0.6.3)</mark>.lua</code></pre>
+          </div>
+        </article>
+
+        <article class="note" data-reveal>
+          <h3>崩溃屏快捷键</h3>
+          <p>报错先写盘再进屏：<code>crash/PsychEngine_&lt;时间&gt;.txt</code>，内容包含引擎、时间、错误与调用栈。</p>
+          <ul class="keys">
+            <li><kbd>QUIT</kbd><span>直接退出</span></li>
+            <li><kbd>MAIN MENU</kbd><span>返回当前侧主菜单</span></li>
+            <li><kbd>M</kbd><kbd>ESC</kbd><span>同上</span></li>
+            <li><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd><kbd>Q</kbd><span>手动触发</span></li>
+          </ul>
+        </article>
+      </div>
+
+      <blockquote class="pull" data-reveal>
+        <p>“JS 那侧的 FunkinJS 转译器和存档，是故意留着的装置。”</p>
+        <cite>README — 关于那段历史</cite>
+      </blockquote>
     </div>
-  </div>
-</section>
+  </section>
+
+  <section class="section section-invert" id="download">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <span class="section-index">04</span>
+        <h2 class="section-title">下载</h2>
+        <p class="section-note">这一块直接读仓库的 Releases，发新版后页面自己会更新。</p>
+      </header>
+
+      <div class="release" data-reveal>
+        <div class="release-head">
+          <span class="badge">LATEST</span>
+          <strong id="latest-name">正在读取…</strong>
+          <span class="release-date muted" id="latest-date"></span>
+        </div>
+        <div class="assets" id="latest-assets">
+          <span class="muted">正在连接 GitHub…</span>
+        </div>
+      </div>
+
+      <details class="history" data-reveal>
+        <summary><span>历史版本</span><span class="history-caret" aria-hidden="true">＋</span></summary>
+        <div class="release-list" id="release-list">
+          <span class="muted">正在读取…</span>
+        </div>
+      </details>
+
+      <p class="engine-foot">
+        下载按钮直接指向 GitHub Release 附件，历史版本在折叠区里。
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="docs">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <span class="section-index">05</span>
+        <h2 class="section-title">文档</h2>
+        <p class="section-note">改兼容层之前，先读这几份。</p>
+      </header>
+
+      <ul class="doc-list">
+        <li data-reveal>
+          <a href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine/blob/main/docs/AI_HANDOFF.md" target="_blank" rel="noopener">
+            <span class="doc-num">01</span>
+            <span class="doc-name">AI_HANDOFF.md</span>
+            <span class="doc-desc">总交接：目录约定、修复索引、文档导航</span>
+            <span class="doc-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine/blob/main/docs/LUA_COMPAT.md" target="_blank" rel="noopener">
+            <span class="doc-num">02</span>
+            <span class="doc-name">LUA_COMPAT.md</span>
+            <span class="doc-desc">Lua 兼容层逐条修复记录</span>
+            <span class="doc-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine/blob/main/docs/HANDOFF_DUAL_ENGINE.md" target="_blank" rel="noopener">
+            <span class="doc-num">03</span>
+            <span class="doc-name">HANDOFF_DUAL_ENGINE.md</span>
+            <span class="doc-desc">0.6.3 移植 + 原版 1.0.4 并进同一个 exe</span>
+            <span class="doc-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine/blob/main/docs/JS_QUICKJS.md" target="_blank" rel="noopener">
+            <span class="doc-num">04</span>
+            <span class="doc-name">JS_QUICKJS.md</span>
+            <span class="doc-desc">QuickJS 桥协议、加宿主函数的步骤、已知限制</span>
+            <span class="doc-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine/blob/main/docs/JS_TRANSPILE_HISTORY.md" target="_blank" rel="noopener">
+            <span class="doc-num">05</span>
+            <span class="doc-name">JS_TRANSPILE_HISTORY.md</span>
+            <span class="doc-desc">Troll 转译器原始说明 + 30 条 issue 存档</span>
+            <span class="doc-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine/blob/main/docs/SCRIPT_ISOLATION_AUDIT.md" target="_blank" rel="noopener">
+            <span class="doc-num">06</span>
+            <span class="doc-name">SCRIPT_ISOLATION_AUDIT.md</span>
+            <span class="doc-desc">三棵树脚本隔离问题表</span>
+            <span class="doc-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine/blob/main/docs/COMPAT_REVIEW.md" target="_blank" rel="noopener">
+            <span class="doc-num">07</span>
+            <span class="doc-name">COMPAT_REVIEW.md</span>
+            <span class="doc-desc">挑刺式审查，项目定位说明</span>
+            <span class="doc-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine/blob/main/docs/BUILDING.md" target="_blank" rel="noopener">
+            <span class="doc-num">08</span>
+            <span class="doc-name">BUILDING.md</span>
+            <span class="doc-desc">上游 Haxe 环境搭建步骤</span>
+            <span class="doc-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="upstream">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <span class="section-index">06</span>
+        <h2 class="section-title">上游</h2>
+        <p class="section-note">这条线站在谁的肩膀上，以及那一个被替代掉的。</p>
+      </header>
+
+      <div class="upstream-grid" data-reveal>
+        <article class="upstream">
+          <span class="upstream-role">上游 · Upstream</span>
+          <h3>Psych Engine</h3>
+          <p>本仓是 <a href="https://github.com/ShadowMario/FNF-PsychEngine" target="_blank" rel="noopener">ShadowMario/FNF-PsychEngine</a> 1.0.4 的 fork。公共层只许依赖 flixel / lime / std，三侧引擎共用同一个启动入口。</p>
+          <p class="mono" style="font-size:11.5px;letter-spacing:.04em">Apache-2.0</p>
+        </article>
+
+        <article class="upstream">
+          <span class="upstream-role">思路参考 · Reference</span>
+          <h3>NovaFlare Engine</h3>
+          <p><a href="https://github.com/NovaFlare-Engine-Concentration/FNF-NovaFlare-Engine" target="_blank" rel="noopener">NovaFlare Engine</a> —— 兼容层思路参考（<code>FlxTween.globalManager.clear()</code> 那套），Maopou 在那边做开发。</p>
+        </article>
+
+        <article class="upstream">
+          <span class="upstream-role">运行时 · Runtime</span>
+          <h3>quickjs-ng</h3>
+          <p>真 QuickJS-NG 运行时，源码与静态库放在 <code>third_party/quickjs-ng/</code>，产物不入库。</p>
+          <p class="mono" style="font-size:11.5px;letter-spacing:.04em">MIT · 见该目录下 LICENSE</p>
+        </article>
+
+        <article class="upstream">
+          <span class="upstream-role">被替代 · Superseded</span>
+          <h3>PE-QuickJs-Engine</h3>
+          <p>（代替傻逼开发的 <a href="https://github.com/rongtang2026/PE-QuickJs-Engine" target="_blank" rel="noopener">PE-QuickJs-Engine</a>，烂完了还敢发，态度还恶劣）</p>
+          <p>JS 那侧的 FunkinJS 转译器和存档是个故意留着的装置 —— 针对 rongtang2026/PE-QuickJs-Engine 拿 <code>{</code>→<code>end</code> 冒充 JS 支持、违反开源协议那件事。存档原本塞在 <code>JavaScriptUtils.hx</code> 的注释里，2026-11-17 搬到了 <code>docs/JS_TRANSPILE_HISTORY.md</code>。</p>
+        </article>
+      </div>
+
+      <div class="tree" data-reveal>
+        <div class="codeblock">
+          <div class="codeblock-bar">
+            <span>仓库目录</span>
+            <button class="copy-btn" type="button" data-copy="manage.sh / manage.bat                 中心脚本入口">COPY</button>
+          </div>
+          <pre><code>manage.sh / manage.bat                 中心脚本入口
+.workbuddy/toolchain/                  安卓 JDK17 + SDK + NDK（不入库）
+.workbuddy/upstream/                   上游参照（pe063 / pe073 / pe104 / novaflare）
+.workbuddy/memory/                     逐日流水账
+
+source/                                公共层，只许依赖 flixel / lime / std
+├── Main.hx                            入口，读 engine.txt 分叉
+├── Engine.hx                          engine.txt 读写
+└── backend/{EngineCrash,CrashState}.hx 崩溃拦截 + 崩溃屏（三棵树共用）
+
+source_body/body/                      改版 1.0.4（本体），包 backend.* / states.*，启动类在 body.Main
+├── backend/                           Paths / Song / ClientPrefs / ScriptClassAliases
+├── psychlua/                          FunkinLua / FunkinJS / JavaScriptUtils（校验锚点）
+├── jsruntime/                         真 QuickJS-NG 运行时
+├── objects/Bar.hx                     尺寸 / 填充方向兼容
+├── options/EngineSelectSubState.hx    引擎切换界面
+└── states/PlayState.hx                uiGroup 展开、旧容器、退出清理
+
+source_vanilla/vanilla/                原版 1.0.4，全部 vanilla.* 前缀
+└── psychlua/IsolatedImports.hx        import 别名表（manage.sh 功能 5 重建）
+
+source_063/pe063/                      Psych Engine 0.6.3，全部 pe063.* 前缀
+
+docs/                                  见下一节
+third_party/quickjs-ng/                JS 运行时源码 + 静态库（产物不入库）
+export/&lt;mode&gt;/windows/bin/             构建产物，engine.txt 在这里</code></pre>
+        </div>
+      </div>
+
+      <dl class="licence" data-reveal>
+        <div>
+          <dt>本仓库</dt>
+          <dd>Apache-2.0（<code>LICENSE</code>）</dd>
+        </div>
+        <div>
+          <dt>third_party/quickjs-ng</dt>
+          <dd>MIT（见其目录下 <code>LICENSE</code>）</dd>
+        </div>
+        <div>
+          <dt>引擎切换</dt>
+          <dd><code>Options → Switch Engine</code>，写进 exe 旁边的 <code>engine.txt</code></dd>
+        </div>
+      </dl>
+
+      <p class="engine-foot" data-reveal>
+        文档导航见「文档」一栏；改兼容层之前，先看 <code>docs/AI_HANDOFF.md</code>。
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-invert" id="community">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <span class="section-index">07</span>
+        <h2 class="section-title">参与</h2>
+        <p class="section-note">问题、想法、补丁，都往仓库里丢。</p>
+      </header>
+
+      <div class="credits" data-reveal>
+        <div class="credit">
+          <img class="credit-portrait" src="assets/contributors/deepseek.png" alt="DeepSeek" loading="lazy">
+          <span class="credit-role">主要开发</span>
+          <strong>DeepSeek</strong>
+          <span class="credit-note">Developer</span>
+        </div>
+        <div class="credit">
+          <img class="credit-portrait" src="assets/contributors/wq.png" alt="WQ" loading="lazy">
+          <span class="credit-role">监督</span>
+          <strong>WQ</strong>
+          <span class="credit-note">Supervision</span>
+        </div>
+        <div class="credit">
+          <img class="credit-portrait" src="assets/contributors/maopou.png" alt="Maopou" loading="lazy">
+          <span class="credit-role">特别感谢</span>
+          <strong>Maopou</strong>
+          <span class="credit-note">Special Thanks · NovaFlare Engine</span>
+        </div>
+        <a class="credit credit-link" href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine/issues" target="_blank" rel="noopener">
+          <span class="credit-role">反馈</span>
+          <strong>Issues</strong>
+          <span class="credit-note">提交问题 ↗</span>
+        </a>
+      </div>
+
+      <figure class="credit-card" data-reveal>
+        <img src="assets/contributors/maopou-card.jpg" alt="Maopou Programmer 名片" loading="lazy">
+        <figcaption>
+          <span class="credit-role">Programmer 名片</span>
+          Lanli 为 Maopou 使用 画世界pro 绘制的 Programmer 名片。这个仓库兼容层的好几个思路是从那边学的。
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="section section-invert" id="pillory">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <span class="section-index">08</span>
+        <h2 class="section-title">公开处刑</h2>
+        <p class="section-note">两块黑布。鼠标移上去才揭开。</p>
+      </header>
+
+      <div class="exhibit-grid" data-reveal>
+        <figure class="exhibit">
+          <button class="exhibit-frame" type="button" aria-label="揭开故雪的头像">
+            <img src="assets/people/guxue.jpg" alt="故雪" loading="lazy">
+            <span class="exhibit-veil" aria-hidden="true">点击 / 悬停揭示<span>3546917455792249</span></span>
+          </button>
+          <figcaption>
+            <span class="exhibit-name">故雪<span class="mono">3546917455792249</span></span>
+            的<a href="https://space.bilibili.com/3546917455792249" target="_blank" rel="noopener">“无辜”宣发</a>
+          </figcaption>
+        </figure>
+
+        <figure class="exhibit">
+          <button class="exhibit-frame" type="button" aria-label="揭开丁零的头像">
+            <img src="assets/people/dingling.jpg" alt="丁零" loading="lazy">
+            <span class="exhibit-veil" aria-hidden="true">点击 / 悬停揭示<span>3747561405943059</span></span>
+          </button>
+          <figcaption>
+            <span class="exhibit-name">丁零<span class="mono">3747561405943059</span></span>
+            他的<a href="https://space.bilibili.com/3747561405943059" target="_blank" rel="noopener">豪情在天的作者&amp;没长脑子的狗托&amp;欺软怕硬的出生</a>的<a href="https://baike.baidu.com/item/%E8%A8%80%E8%AE%BA%E8%87%AA%E7%94%B1/1520804" target="_blank" rel="noopener">言论</a>
+          </figcaption>
+        </figure>
+      </div>
+
+      <p class="pillory-note">
+        遮罩只是遮罩，默认黑块，悬停或键盘聚焦即还原原图。
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="archive">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <span class="section-index">09</span>
+        <h2 class="section-title">档案</h2>
+        <p class="section-note">原文照搬，一个字没改。</p>
+      </header>
+
+      <dl class="archive-meta" data-reveal>
+        <div><dt>来源</dt><dd>GitHub API 完整快照</dd></div>
+        <div><dt>抓取</dt><dd>2026-11-18 · state=all</dd></div>
+        <div><dt>条目</dt><dd>19 条（原文称 30 条，编号缺 3）</dd></div>
+        <div><dt>处理</dt><dd>仅转排版，措辞未动</dd></div>
+      </dl>
+
+      <div class="provenance" data-reveal>
+        <p>原存放于 <code>FNF-PE_RealQuickJs_Engine/docs/JS_TRANSPILE_HISTORY.md</code>，2026-11-17 从注释里搬出。2026-11-18 单独归档。原仓库 issue 已被全部删除，此处为 GitHub API 抓取的完整快照。</p>
+      </div>
+
+      <div class="bili" data-reveal>
+        <div class="bili-head">
+          <h3 class="bili-title">关于一些问题的答复?</h3>
+          <span class="bili-meta">
+            <a href="https://www.bilibili.com/opus/1270528382201757699" target="_blank" rel="noopener">Hn漓之幻_ · bilibili 动态</a>
+            · 编辑于 2026年11月14日 19:48
+          </span>
+        </div>
+          <p class="bili-p">你无敌了，继续猛猛欺骗我们观众，继续张嘴就是瞎话，继续让开发的态度恶劣，</p>
+          <p class="bili-p">紧急补充：你们在试图销毁证据</p>
+          <figure class="bili-fig"><img src="assets/bili/05d276130cd656e34d9cc31c3214222a93f21dca.png" alt="配图" loading="lazy"></figure>
+          <figure class="bili-fig"><img src="assets/bili/45dbf47ca7f7f00834b69b933e967754c6206035.png" alt="配图" loading="lazy"></figure>
+          <figure class="bili-fig"><img src="assets/bili/30251d22cf3f5c6cc8ab151215e8dd96438dcb68.png" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">能在仓库直接开喷除了你们没别人了我笑了，内涵谁呢</p>
+          <p class="bili-p">首先你开源协议塞进加密的包里面不让别人看就是补上了？</p>
+          <figure class="bili-fig"><img src="assets/bili/af88f0cf8e5c195ceb46016279c2a68199885821.png" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">（仓库内的开源协议仍然是空的）（补充：这是20分钟前截的图）</p>
+          <p class="bili-ts mono">00:06</p>
+          <figure class="bili-fig"><img src="assets/bili/f15ff62cc03ed74db9a77098e3c0867c69676ed7.jpg" alt="配图" loading="lazy"></figure>
+          <figure class="bili-fig"><img src="assets/bili/eb58f2064efe6d1381d9dcd364286fc69448da47.png" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">首先空壳是你们说的，还自导自演上了</p>
+          <p class="bili-p">然后你javascript什么时候就是java了？连这两个都分不清楚，不愧是LLM用多了出幻觉了</p>
+          <p class="bili-ts mono">00:15</p>
+          <figure class="bili-fig"><img src="assets/bili/f9af153393cfa132c8d6bbc3e0c1625a64d03d53.png" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">（还个人猜测，那不就是无知吗？）</p>
+          <p class="bili-ts mono">00:25</p>
+          <figure class="bili-fig"><img src="assets/bili/8f0a846a824f0d31634982a9bbc7a46d5300f439.jpg" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">（也是无知，以防你不知道quickJS作为一个解释器嵌入需要和haxe在C++架构上进行链接，不一个个调试根本不可以）</p>
+          <p class="bili-p">还原度18%继续编数字，请问反编译演示的编译版本里面所有的js正常运行，不就是你们所谓的核心功能吗？</p>
+          <p class="bili-ts mono">00:28</p>
+          <figure class="bili-fig"><img src="assets/bili/d626917ac3361c4b7053dfc3ff7fda078ef04968.jpg" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">（你们的原话）</p>
+          <figure class="bili-fig"><img src="assets/bili/b3a3a02dea6247d3a9712fddd3f0ad0b4c4f8044.png" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">（另一边）</p>
+          <p class="bili-p">一张图说明不了什么，但是如果源文件呢？</p>
+          <figure class="bili-fig"><img src="assets/bili/b47e04bb423eaed033efbfdacefb730eb1e3a509.png" alt="配图" loading="lazy"></figure>
+          <figure class="bili-fig"><img src="assets/bili/a412783aa2bd8053b8deaa29f62c39915bdfe4da.png" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">（注意，我们反编译可是拿到了完完整整的API表单）</p>
+          <p class="bili-ts mono">00:33</p>
+          <figure class="bili-fig"><img src="assets/bili/e887c961b9424c01612e112086c61007af6f55f3.png" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">工具用错请问我们是两个一起用的怎么错了？反倒是某人使用破解版的IDA还跳脸的。</p>
+          <figure class="bili-fig"><img src="assets/bili/cef001f84abcb1766aca5d3465c518d9a002af14.png" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">（github原图，可以自己看的github.com/rongtang2026/PE-QuickJs-Engine）</p>
+          <p class="bili-ts mono">00:38</p>
+          <figure class="bili-fig"><img src="assets/bili/7c3f670100b4343d0293e21de1e5d761911165cc.jpg" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">注意我们拿到的不是机器码，我们拿到的是拆包后的一堆dex和so文件，就算全部的源码已经经过2层编译器烧掉了，剩下的so文件仍然可以推出来关系（甚至明文api列表）</p>
+          <figure class="bili-fig"><img src="assets/bili/d4be159b92f5ceb366198ca793cb346f71e9b389.png" alt="配图" loading="lazy"></figure>
+          <p class="bili-ts mono">00:41</p>
+          <figure class="bili-fig"><img src="assets/bili/d6eff7431b5ab485adef4de62c73d0e48153c690.jpg" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">你说的？</p>
+          <p class="bili-p">那么请问这个怎么回事</p>
+          <figure class="bili-fig"><img src="assets/bili/6032f283834841b7ff9f9574cbd6fb7360dba646.png" alt="配图" loading="lazy"></figure>
+          <p class="bili-p">这是一切的导火索</p>
+          <p class="bili-p">首先是你们的态度低劣的，反倒倒泼脏水跳脸试图歪曲事实，你已经让圈内各大编程大佬都来观摩你的拙略表演你还不停手吗？</p>
+          <p class="bili-ref mono">cv53912757</p>
+      </div>
+
+      <div class="archive-list" data-reveal>
+      <div class="archive-list" data-reveal>
+        <details class="archive-item is-closed">
+          <summary>
+            <span class="archive-num">#1</span>
+            <span class="archive-state">CLOSED</span>
+            <span class="archive-title">对本项目的质量评价</span>
+            <span class="archive-author">by Lv233-Haxe</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>原神牛逼</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#2</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">对本项目的质量评价</span>
+            <span class="archive-author">by Lv233-Haxe</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>很明显在6202年在一个拥有超过<a href="github.com">两千万同性恋的开源代码托管平台</a>拥有一些人工智能生成的项目并不是一件很罕见的事情，笔者认为使用一个<a href="https://blog.csdn.net/2401_85375151/article/details/151864625">输入侧支持图像的预生成式转换语言大模型</a>并不是一件可耻的事情，毕竟使用<a href="https://blog.csdn.net/2401_85375151/article/details/151864625">输入侧支持图像的预生成式转换语言大模型</a>也是有优秀的，但是今天笔者遇到了一个让我惊呼：我操！这是什么！的一个我预计应该是使用<a href="https://blog.csdn.net/2401_85375151/article/details/151864625">输入侧支持图像的预生成式转换语言大模型</a>制作的肥牛饭超级神秘项目，笔者认为很难把 <a href="https://github.com/ShadowMario/FNF-PsychEngine/releases">心理发动机</a> 不支持<a href="https://www.lua.org/">LuaScript</a> 支持<a href="https://web.developers.google.cn/javascript">JavaScript</a> 这几个八辈子不打关系的词关系在一起，更神奇的是我操还有火山开发接口支持，于是笔者打开了释放界面进行一个<a href="https://github.com/rongtang2026/PE-QuickJs-Engine/releases">r-1.0.0</a>的<a href="https://baike.baidu.com/item/%E4%B8%8B%E8%BD%BD/2270927">下载</a>并且<a href="https://baike.baidu.com/item/%E6%B8%B8%E7%8E%A9/6899042">游玩</a></p>
+<p>首先笔者进入就发现了一个问题：<strong>我操！怎么这么糊？？？？</strong>
+请看以下图片</p>
+<img src="assets/issues/0421fb1c-3455-48d0-b20a-6dcb2a45a768.png" alt="Image" loading="lazy">
+
+<p>笔者认为这可能是开发者<strong>不小心的把分辨率锁定到了<a href="https://baike.baidu.com/item/720p/1155748">720P</a>这个在6202极其不高清的瞎眼分辨率</strong>，这个暂不评价</p>
+<p>在随后笔者发现了第二个问题：我操！这个按钮怎么这么<strong>古老</strong>？？？？</p>
+<img src="assets/issues/504c91b5-a4fd-4b22-8b89-714335f7da21.png" alt="Image" loading="lazy">
+
+<p>笔者认为能在6202年再次见到这个按钮贴图简直是 <strong><a href="https://www.bilibili.com/zh-Hans/video/BV1VgTN64EQM">伏黑甚尔给五条悟脖子戳了再补了不知道多少刀最后在离开时遇到充满鲜血活蹦乱跳的五条悟</a>并且还有一句</strong> <strong>&quot;哟，撒西不理&quot;</strong>
+<strong><em>”真的假的“</em></strong></p>
+<p>然后就是笔者认为本引擎最<a href="https://baike.baidu.com/item/%E6%8B%9B%E7%89%8C/3555533">招牌</a>之一功能出现了，笔者一度认为这可能是 患有 <strong><a href="https://health.baidu.com/m/detail/ar_7169414546302745152">脑部患有先天性或后天性智力障碍</a></strong> 或者 <strong><a href="https://baike.baidu.com/item/%E5%B0%8F%E5%84%BF%E5%94%90%E6%B0%8F%E7%BB%BC%E5%90%88%E5%BE%81/7253892">先天性缺少二十一号染色体引发的唐氏综合征</a></strong> 开发者才能做出的功能
+笔者为何会做出如此高深的评价呢？请看以下文字</p>
+<p><strong>本项目拥有<a href="(https://web.developers.google.cn/javascript)">【JavaScript】</a>的格式，对<a href="https://lib.haxe.org/p/hscript/">【Hscript】</a>的语法的偷窃和对<a href="https://www.lua.org/">【Lua】</a>的兼容</strong></p>
+<p>我操！恶俗啊！这个引擎支持【JavaScript】这个东西笔者认为已经很神了但是为什么要<strong>删除对【Lua】的支持</strong>并且进行一个<strong>对【Lua脚本】的肥美兼容</strong>？？？
+笔者在一个<a href="https://baike.baidu.com/item/%E6%99%AE%E6%9C%97%E5%85%8B%E6%97%B6%E9%97%B4/2429708">普朗克时间</a>内推测可能是作者想要让该<a href="https://baike.baidu.com/item/%E5%8F%91%E5%8A%A8%E6%9C%BA/866440">发动机</a>对脚本性能进行提升的情况下还可以吃到大部分 <a href="https://baike.baidu.com/item/%E6%A8%A1%E7%BB%84/5680690">由个人或者团队制作的游戏额外内容的肥美模组</a> 的红利所以说才会干出这种<a href="https://baike.baidu.com/item/%E5%82%BB%E9%80%BC/977754">把马踢了换成驴</a>的操作</p>
+<p>好的我们再看看其他的吧。
+就在这时笔者发现了该<a href="https://baike.baidu.com/item/%E5%8F%91%E5%8A%A8%E6%9C%BA/866440">发动机</a>最肥美的物品<a href="https://www.vulkan.org/">【火山渲染开放接口】</a></p>
+<p>就在笔者切换完毕进入Weekend1周目进行一个肥美的游玩时，该游戏发生了毫无征兆的<a href="https://baike.baidu.com/item/%E5%B4%A9%E6%BA%83/4175">崩溃</a>，笔者百思不得其解，笔者使用一个<a href="https://baike.baidu.com/item/%E6%99%AE%E6%9C%97%E5%85%8B%E6%97%B6%E9%97%B4/2429708">普朗克时间</a>分析首先该APK拥有整整376<a href="https://zhidao.baidu.com/question/1935554494053572347.html">MB</a>，不可能没有<a href="https://baike.baidu.com/item/assets/51072320">资产</a>文件
+当我打开<a href="https://baike.baidu.com/item/%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86%E5%99%A8/8716754">文件管理器</a>的时候笔者发现了最黑暗的真相——<a href="https://zhidao.baidu.com/question/538299339.html">我操</a>！<a href="https://baike.baidu.com/item/assets/51072320">资产</a>文件还得自己放！
+<a href="https://cnmeme.wiki/entry/%E6%90%9E%E5%8D%8A%E5%A4%A9%E8%BF%98%E8%A6%81%E8%87%AA%E5%B7%B1%E6%8B%BC#:~:text=%E8%AF%A5%E6%A2%97%E5%87%BA%E8%87%AAB%E7%AB%99UP%E4%B8%BB%20Otto%20Croy,%E7%9A%84%E9%92%A2%E9%93%81%E4%BE%A0%E6%8B%BC%E8%A3%85%E6%A8%A1%E5%9E%8B%E5%90%90%E6%A7%BD%E8%A7%86%E9%A2%91%E3%80%82%20%E8%A7%86%E9%A2%91%E4%B8%ADUP%E4%B8%BB%E8%8A%B1%E7%BA%A6%E4%B8%89%E7%99%BE%E5%85%83%E8%B4%AD%E4%B9%B0%E9%92%A2%E9%93%81%E4%BE%A0%E6%8B%BC%E8%A3%85%E6%A8%A1%E5%9E%8B%EF%BC%8C%E6%9C%AC%E4%BB%A5%E4%B8%BA%E6%98%AF%E6%88%90%E5%93%81%E6%89%8B%E5%8A%9E%EF%BC%8C%E7%BB%93%E6%9E%9C%E5%BC%80%E7%AE%B1%E5%90%8E%E6%89%8D%E5%8F%91%E7%8E%B0%E9%9C%80%E8%A6%81%E8%87%AA%E8%A1%8C%E6%8B%BC%E8%A3%85%EF%BC%9B%E8%80%8C%E4%B8%94%E9%9B%B6%E4%BB%B6%E8%B4%A8%E9%87%8F%E4%B8%8E%E7%BB%84%E5%90%88%E5%BA%A6%E4%B8%80%E8%88%AC%EF%BC%8C%E7%94%9A%E8%87%B3%E4%B8%8D%E5%A6%82%E7%99%BE%E5%85%83%E7%BA%A7%E6%88%90%E5%93%81%EF%BC%8C%E4%BA%8E%E6%98%AF%E5%90%90%E6%A7%BD%E2%80%9C%E6%90%9E%E5%8D%8A%E5%A4%A9%E8%BF%98%E8%A6%81%E8%87%AA%E5%B7%B1%E6%8B%BC%E2%80%9D%E3%80%82%20%E7%94%A8%E4%BA%8E%E5%90%90%E6%A7%BD%E2%80%9C%E4%BB%A5%E4%B8%BA%E6%98%AF%E6%88%90%E5%93%81%E6%88%96%E5%88%B0%E6%89%8B%E5%8D%B3%E7%94%A8%EF%BC%8C%E7%BB%93%E6%9E%9C%E8%BF%98%E8%A6%81%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E7%BB%84%E8%A3%85%E2%80%9D%E7%9A%84%E8%90%BD%E5%B7%AE%E6%84%9F%E3%80%82%20%E5%B8%B8%E8%A7%81%E5%9C%BA%E6%99%AF%E5%8C%85%E6%8B%AC%E4%B9%B0%E6%8B%BC%E8%A3%85%E6%A8%A1%E5%9E%8B%E3%80%81%E6%8B%BC%E8%A3%85%E5%AE%B6%E5%85%B7%E3%80%81DIY%E4%BA%A7%E5%93%81%E7%AD%89%EF%BC%8C%E5%B0%A4%E5%85%B6%E6%98%AF%E5%9C%88%E5%A4%96%E4%BA%BA%E9%81%87%E5%88%B0%E7%BC%BA%E4%BB%B6%E3%80%81%E5%8D%A1%E6%A6%AB%E3%80%81%E5%B7%A5%E5%85%B7%E4%B8%8D%E9%BD%90%E3%80%81%E9%9B%B6%E4%BB%B6%E9%9A%BE%E5%AE%89%E7%AD%89%E6%83%85%E5%86%B5%E6%97%B6%E3%80%82"><strong><em>到头来还得自己拼</em></strong></a>
+终于笔者进入了游戏并且看到了对笔者造成了<a href="https://baike.baidu.com/item/%E4%B8%8D%E5%8F%AF%E9%80%86/9966659">不可逆</a>伤害的物品</p>
+<img src="assets/issues/0377fe77-a668-4604-b023-ad2e8fc9d3cb.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/c9ea85d4-28e8-41e3-9bf8-74295a4b1567.png" alt="Image" loading="lazy">
+
+<p>即使笔者拥有<a href="https://wenku.baidu.com/view/bcd8375a336baf1ffc4ffe4733687e21af45ff26.html#:~:text=%E2%80%9C%E9%87%8E%E7%BB%B7%E5%85%88%E7%94%9F%E2%80%9D%E6%98%AF%E4%B8%80%E4%B8%AA%E4%BB%A5%E6%A0%87%E5%BF%97%E6%80%A7%E5%BC%80%E5%9C%BA%E7%99%BD%E2%80%9C%E6%88%91%E6%98%AF%E9%87%8E%E7%BB%B7%E5%85%88%E7%94%9F%E2%80%9D%E5%9C%A8%E7%BD%91%E7%BB%9C%E4%B8%AD%E6%B4%BB%E8%B7%83%E7%9A%84%E8%99%9A%E6%8B%9F%E8%A7%92%E8%89%B2%E6%88%96%E6%B5%81%E8%A1%8C%E6%A2%97%E3%80%82,%E5%85%B6%E6%A0%B8%E5%BF%83%E6%B4%BB%E5%8A%A8%E6%98%AF%E5%8F%91%E8%B5%B7%E2%80%9C%E7%BB%B7%E7%A5%9E%E5%A4%A7%E8%B5%9B%E2%80%9D%EF%BC%8C%E5%8D%B3%E5%90%91%E8%A7%82%E4%BC%97%E5%B1%95%E7%A4%BA%E4%B8%80%E7%B3%BB%E5%88%97%E6%90%9E%E7%AC%91%E6%88%96%E8%8D%92%E8%AF%9E%E7%9A%84%E5%9B%BE%E7%89%87%E3%80%81%E8%A7%86%E9%A2%91%E7%89%87%E6%AE%B5%EF%BC%8C%E5%B9%B6%E6%8C%91%E6%88%98%E8%A7%82%E4%BC%97%E8%83%BD%E5%90%A6%E2%80%9C%E7%BB%B7%E4%BD%8F%E2%80%9D%E2%80%94%E2%80%94%E4%B9%9F%E5%B0%B1%E6%98%AF%E5%BF%8D%E4%BD%8F%E4%B8%8D%E7%AC%91%E6%88%96%E4%BF%9D%E6%8C%81%E9%95%87%E5%AE%9A%E3%80%82%20%E8%BF%99%E9%A1%B9%E5%A4%A7%E8%B5%9B%E9%80%9A%E5%B8%B8%E4%BC%B4%E9%9A%8F%E7%9D%80%E5%8D%95%E6%96%B9%E9%9D%A2%E5%AE%A3%E5%B8%83%E7%9A%84%E3%80%81%E6%9E%81%E5%85%B7%E8%AF%B1%E6%83%91%E5%8A%9B%E6%88%96%E6%9E%81%E5%85%B6%E6%97%A0%E5%8E%98%E5%A4%B4%E7%9A%84%E5%A5%96%E6%83%A9%E6%9D%A1%E6%AC%BE%EF%BC%8C%E6%9C%AC%E8%B4%A8%E6%98%AF%E4%B8%80%E7%A7%8D%E5%B8%A6%E6%9C%89%E6%88%8F%E8%B0%91%E5%92%8C%E9%80%BB%E8%BE%91%E5%8F%8D%E8%BD%AC%E8%89%B2%E5%BD%A9%E7%9A%84%E5%B9%BD%E9%BB%98%E4%BA%92%E5%8A%A8%E5%BD%A2%E5%BC%8F%EF%BC%8C%E5%9C%A8%E6%8A%96%E9%9F%B3%E3%80%81%E8%B4%B4%E5%90%A7%E7%AD%89%E5%B9%B3%E5%8F%B0%E5%B9%BF%E6%B3%9B%E4%BC%A0%E6%92%AD%E3%80%82">绷神大赛</a>非<a href="https://baike.baidu.com/item/%E9%9D%A2%E7%A5%9E%E7%BB%8F%E9%BA%BB%E7%97%B9/31686">面瘫</a>获得冠军的纪录可是该图片还是成功使笔者<a href="https://wenku.baidu.com/view/55b7be8c564de518964bcf84b9d528ea81c72f8d.html">破绷</a>了并且笑爆我一颗<a href="https://baike.baidu.com/item/%E7%9D%BE%E4%B8%B8/613012">睾丸</a>，导致笔者与<a href="https://moegirl.uk/index.php?title=%E9%99%86%E5%A5%A5%E5%B0%8F%E9%BA%BB%E5%90%95&variant=zh-cn">笔者老婆</a>平均拥有1颗<a href="https://baike.baidu.com/item/%E7%9D%BE%E4%B8%B8/613012">睾丸</a>下降到平均仅有0.5颗<a href="https://baike.baidu.com/item/%E7%9D%BE%E4%B8%B8/613012">睾丸</a>
+所幸明日是笔者的换蛋期所以笔者将会与<a href="https://moegirl.uk/index.php?title=%E9%99%86%E5%A5%A5%E5%B0%8F%E9%BA%BB%E5%90%95&variant=zh-cn">笔者老婆</a>再次平均拥有1颗<a href="https://baike.baidu.com/item/%E7%9D%BE%E4%B8%B8/613012">睾丸</a></p>
+<p>在最后笔者将发送最后两张图片</p>
+<img src="assets/issues/1af8bd71-e429-459f-b9dc-6daf89ab43cc.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/d80cc7af-c0cf-4838-a09f-48ed3d033a37.png" alt="Image" loading="lazy">
+
+<p>笔者并不反对使用一个<a href="https://blog.csdn.net/2401_85375151/article/details/151864625">输入侧支持图像的预生成式转换语言大模型</a>进行创作的开源项目，哦不对此项目甚至是闭源导致笔者无法下载源码进行品鉴，但是笔者认为使用<a href="https://blog.csdn.net/2401_85375151/article/details/151864625">输入侧支持图像的预生成式转换语言大模型</a>应该拥有一个<a href="https://health.baidu.com/m/detail/ar_4377269509735249565">健康</a>的<a href="https://baike.baidu.com/item/%E5%A4%A7%E8%84%91/791360">大脑</a>提供良好的提示词进行创作，而不是做了一个糟糕至极<a href="https://baike.baidu.com/item/%E7%8B%97%E5%B1%8E/2354738">半成品</a>就发给别人进行品鉴</p>
+<p>完.</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#4</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">如图所示</span>
+            <span class="archive-author">by Wqawa</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<img src="assets/issues/d3488331-7459-45cf-b946-0d905176dc49.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/f390d853-c665-46e5-b032-5cf11535cac2.png" alt="Image" loading="lazy">
+
+<p>不想开源是因为99.9999% <a href="https://zhuanlan.zhihu.com/p/1923403088338855693">vibe coding</a> 不敢吧，怕圈内人真扒开看到一堆浆糊来指责你，是这样吧？我们伟大的<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">QuickJS-Engine</a>作为<a href="https://github.com/ShadowMario/FNF-PsychEngine">Psych-Engine</a>的二改分发版本怎么可能呢，对吧，所做的行为都是为了伟大的FNF社区的<a href="https://baike.baidu.com/item/%E5%8B%BF%E5%BC%80%E5%8E%86%E5%8F%B2%E5%80%92%E8%BD%A6/13210279">进步</a></p>
+<p><a href="https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E4%B8%BB%E6%92%AD/3107130">主播</a>的发言像三岁<a href="https://baike.baidu.com/item/%E5%B0%8F%E5%AD%A9/33044">小孩</a>的同时 这个<a href="https://learn.microsoft.com/zh-cn/agent-framework/journey/llm-fundamentals">溜溜梅</a>生成粑粑也是不出所料的发布了. 原来<a href="https://github.com/ShadowMario/FNF-PsychEngine">Psych-Engine</a>改版是可以不支持<a href="https://%5Blib.haxe.org/p/hscript/%5D(https://lib.haxe.org/p/hscript/)">hscript</a>和<a href="https://baike.baidu.com/item/lua/7570719">lua</a>的 原来把<a href="https://baike.baidu.com/item/lua/7570719">lua</a>的end改成j就是<a href="https://baike.baidu.com/item/JavaScript/321142">js</a>了 我实在不理解为什么会把.lua和.hx后缀删掉就是移除<a href="https://baike.baidu.com/item/lua/7570719">lua</a>和<a href="https://lib.haxe.org/p/hscript/">hscript</a>支持了 不仅保持了0向下兼容的同时 还要往远古粑粑引擎里塞你这一坨粑粑<a href="https://learn.microsoft.com/zh-cn/agent-framework/journey/llm-fundamentals">溜溜梅</a>也真是辛苦了</p>
+<p>哦对了忘说了：你甚至都没有<a href="https://global.bing.com/dict/search?q=fork&FORM=BDVSP6&cc=cn">fork</a>
+送你个<a href="https://pic4.zhimg.com/v2-f037a7842627c437aa0a72bc888c1737_1440w.jpg">礼物</a></p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#5</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">为什么只有 Android 构建。</span>
+            <span class="archive-author">by Bonus-XK</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>你的引擎只有 Android 构建吗，不尊重我们 MacOS 和 Windows 用户是违法的，你完了😡</p>
+<img src="assets/issues/b728bd79-c5b8-4d18-8a71-cf42a8443bb0.png" alt="Image" loading="lazy">
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#6</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">This conversation has been locked and limited to collaborators.</span>
+            <span class="archive-author">by Lv233-Haxe</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>首先看到这个提示笔者很明显是知道 你应该是看到笔者严厉的批判导致一个<a href="https://baike.baidu.com/item/%E7%A0%B4%E9%98%B2/7115620"><strong><em>破防</em></strong></a>的活动</p>
+<p>在此笔者发表一个观点：</p>
+<p>这个项目不敢<a href="https://zhuanlan.zhihu.com/p/51280896">开源</a>大概是因为你这都是用溜溜梅vibe出来的垃圾吧
+你应该很清楚<strong>你发出来这一坨会被人评价或者被人骂</strong>，但是你还是选择了发布其实我是挺佩服你的勇气的</p>
+<p>此为笔者在一天前的想法，可是笔者在看完你的回复后觉得</p>
+<p><em><strong>我操！这就是个臭傻逼！</strong></em></p>
+<p>笔者觉得笔者发表的观点是正确的</p>
+<p>笔者认为你的智商可能并不高所以我将给你最<a href="https://music.163.com/#/song?id=2094776628">直接、最真相、最不绕弯、最扎心、最硬核、最干脆、最不墨迹、最戳痛点、最不留情面、最一针见血、最开门见山、最单刀直入、最不铺垫、最不客套、最不煽情、最不废话、最不拐弯、最不磨叽、最不装、最不端着、最不啰嗦、最不拖沓、最不委婉、最不掩饰、最不藏着掖着、最直白、最露骨、最实在的结论</a></p>
+<p>首先回答第一个问题：<strong><em>你真的确定不是你问题造成的吗</em></strong></p>
+<p>呃我操原来我直接安装游玩然后崩溃了是我的问题啊，<strong>我操！我怎么这么坏！</strong></p>
+<p>第二个问题：在路径/storage/emulated/0/.QJsEngine/只需要创建mods文件夹就行了呀</p>
+<p>我操你374MB的APK没Assets你他妈是塞了多少大狗屎？？？
+还是说你的 CopyState 他妈的根本不会复制Assets？
+笔者认为除了扔给溜溜梅一个心理引擎的移动端口让溜溜梅做而不是人工制作才会出现这种不过大脑的傻逼问题
+好的假设这也是笔者的问题：<strong>我操！我怎么这么坏！</strong></p>
+<p>第三个问题：<strong><em>另外我看你们从来没有考虑过低端机的感受</em></strong></p>
+<p>笔者认为<strong>给低端机做优化你纯属是在搞笑</strong></p>
+<p>因为你项目内的东西比如<strong>js支持和给lua hx干死提升的性能甚至可能不足10%</strong>
+<strong><em>对游玩时的影响甚至可能高达0%</em></strong>
+<strong>笔者的朋友使用设备骁龙8e帧数在144到110跳</strong>
+你他妈的<strong>现代设备优化都是狗屎</strong>何谈旧设备？？</p>
+<p><strong>暂且不论js支持和打死lua hx这件事情，单看给 <em>旧设备 支持Vulkan渲染</em></strong>
+你他妈是人啊？</p>
+<p>笔者在2018手机SOC天梯榜找到最先进的芯片
+骁龙835（搭载 Adreno 540 GPU）原生支持 Vulkan 图形 API，并可运行 Vulkan 1.0/1.1 版本。
+笔者再假定也许项目作者的手机是未来的直接算到骁龙888
+骁龙 888 支持 Vulkan，GPU 为 Adreno 660，官方驱动通常支持到 Vulkan 1.1。
+以上为笔者上网搜索得到的资料并非意淫</p>
+<p>笔者认为你让游戏能够正常渲染并且高性能并且支持现代化渲染游玩至少需要Vulkan 1.3版本
+你他妈现在去给这么老的手机用Vulkan还不如OpenGLES2.0
+还有我单看你这个Vulkan 笔者就可以推测后端完整度对比笔者本人的LimeVK项目可能<strong>不达3%</strong>
+注：笔者做了Vulkan1.4的**<em>所有命令</em><strong>包括</strong><em>常见的设备扩展命令</em><strong>并且自带</strong><em>可用的成熟</em>**的一个渲染后端，并且自带一个 <strong><em>通过Glslang转译GLSLShader</em></strong> 的成熟方案
+<strong><em>最多也就Vulkan1.0不到，可能还多了吧？</em></strong></p>
+<p>哦最后是：<strong><em>总之你用不惯就用别的引擎去，别搁这瞎逼逼</em></strong></p>
+<p>笔者认为以上文章是笔者游玩遇到的真实问题
+并且因为该项目是闭源我还看不到你的代码是溜溜梅还是人写的
+所以笔者推测是溜溜梅大狗粪
+还有给老手机有好的体验并不是你**<em>盲目跟风</em><strong>别人做VK支持和用溜溜梅做</strong><em>大狗屎</em>**的理由</p>
+<p><strong><em>笔者认为你可能缺失了二十一号染色体</em></strong>
+<strong><em>还有我劝你最好不是偷我Lime做的vulkan不然我这辈子就要被别人笑一辈子了</em></strong></p>
+<p>完.</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#7</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">报告出来了，如何呢？</span>
+            <span class="archive-author">by Wqawa</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<h1>PE-QuickJs-Engine 逆向取证报告</h1>
+<p><strong>对象</strong>：<code>PEQuickJsEngine-debug-test.apk</code>
+<strong>大小</strong>：400,750,869 字节
+<strong>SHA-256</strong>：<code>2a24ebb00bb15efcc2d25eebda88d2067a2386554649d9e77cc0de961bf67142</code>
+<strong>作者声明</strong>：基于 Psych Engine <strong>0.7.3</strong>
+<strong>实际基底</strong>：Psych Engine <strong>1.0</strong>（见第 4 节）
+<strong>上游</strong>：ShadowMario/FNF-PsychEngine（Apache-2.0）</p>
+<hr>
+<h2>0. 结论摘要</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>结论</th>
+<th>置信度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>代码基底是 1.0，不是 README 声称的 0.7.3</strong>。文件集与 1.0 交集 130/187，与 0.7.3 仅 96/187；34 个文件只存在于 1.0，<strong>0 个</strong>只存在于 0.7.3</td>
+<td>高</td>
+</tr>
+<tr>
+<td>2</td>
+<td>这是 Psych 的 Haxe 源码分支，<strong>不是重写</strong>。<code>endBullshit</code>、<code>reloadAllShit</code>、<code>grpMenuShit</code> 等原版命名原样保留</td>
+<td>高</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Lua <strong>运行时被整体移除</strong>（<code>lua_*</code>/<code>luaL_*</code>/LuaJIT 符号 0），但 1.0 的 <strong>219 个 Lua API 函数名全部按原名保留（219/219）</strong>，改由 QuickJS 执行</td>
+<td>高</td>
+</tr>
+<tr>
+<td>4</td>
+<td>QuickJS 集成是真实实现（<code>backend.QuickJS.hx</code>，<code>JS_NewRuntime2</code>/<code>JS_Eval</code>/<code>JS_Call</code>），非占位</td>
+<td>高</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Vulkan 确实调了 Vulkan API（65 个 <code>vk*</code> 函数），但是<strong>旁挂渲染</strong>：OpenGL 仍在底下运行、单 render pass、贴图槽上限 47、投影矩阵写死 <strong>1280×720</strong></td>
+<td>高</td>
+</tr>
+<tr>
+<td>6</td>
+<td>包内存在<strong>完整性校验</strong>（<code>Qz7</code> 按 ZIP 条目算 SHA-256，<code>Qz7r</code> 控制 <code>scriptsAllowed</code>），改包即触发 &quot;This copy of the game was modified or re-signed.&quot;</td>
+<td>高</td>
+</tr>
+<tr>
+<td>7</td>
+<td>与 Apache-2.0 §4 的许可文本义务不符：仓库 <code>license</code> 为 null，APK 内无 LICENSE/NOTICE</td>
+<td>高</td>
+</tr>
+<tr>
+<td>8</td>
+<td>资源包同样来自 1.0：含 <code>weekend1/</code> 全套、<code>Voices-Player/Player-Opponent</code> 拆分人声、<code>zh-CN.lang</code>，与 README 声明的 0.7.3 不符</td>
+<td>高</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>本报告只就下列可复现的技术事实作说明，不涉及其他社区讨论中的具体指控。</p>
+</blockquote>
+<hr>
+<h2>1. 方法与可复现性</h2>
+<h3>环境与命令</h3>
+<pre><code>JDK 17 (Temurin 17.0.13+11)、apktool 2.11.1、python 3.13
+jadx 1.5.1 —— 本机不可用，改用 apktool smali
+</code></pre>
+<pre><code class="language-bash">java -jar apktool.jar d -f -s -o apktool_out PEQuickJsEngine-debug-test.apk
+java -jar apktool.jar d -f --no-assets -o apktool_full PEQuickJsEngine-debug-test.apk
+python scan.py lib/arm64-v8a/libApplicationMain.so &lt;quickjs|lua|path|jni|version&gt;
+</code></pre>
+<h3>方法学限制</h3>
+<ol>
+<li><strong>未做动态分析</strong>（未安装运行）。全部为静态取证。</li>
+<li><strong>“文件不存在”是推断</strong>：依据 <code>.so</code> 内残留的 <code>.hx</code> 路径字符串。Haxe 为每个参与的类保留源文件名与符号，但空类或纯类型别名可能被漏掉。关键结论（Lua 运行时移除、基底版本）均有独立证据交叉验证。</li>
+<li><strong>基准版本取 1.0</strong>。版本判断依据第 4 节的文件集交集；若基准选错，差集数字会整体偏移，因此本节同时给出两个 tag 的对照。</li>
+<li>jadx 在本机 Java 26 与 JDK 17 下均加载 303 个类后静默退出，Java 层证据取自 smali 反汇编。</li>
+</ol>
+<hr>
+<h2>2. 包体与清单</h2>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>package</td>
+<td><code>DingLing.pe.QuickJs.Engine</code></td>
+</tr>
+<tr>
+<td>versionName / Code</td>
+<td><code>1.1.0</code> / <code>476</code></td>
+</tr>
+<tr>
+<td>minSdk / targetSdk</td>
+<td><code>21</code> / <code>30</code></td>
+</tr>
+<tr>
+<td>debuggable</td>
+<td><strong><code>true</code></strong></td>
+</tr>
+<tr>
+<td>主 Activity</td>
+<td><code>DingLing.pe.QuickJs.Engine.MainActivity</code>，继承 <code>org.haxe.lime.GameActivity</code></td>
+</tr>
+<tr>
+<td>高敏权限</td>
+<td><code>MANAGE_EXTERNAL_STORAGE</code>、<code>READ_PHONE_STATE</code>、<code>READ/WRITE_EXTERNAL_STORAGE</code></td>
+</tr>
+</tbody></table>
+<p>清单基本是 lime 模板原样输出，连 iOS 专用键 <code>SDL_ENV.SDL_IOS_ORIENTATIONS</code> 都保留。</p>
+<h3>2.1 一个包名，两份类</h3>
+<p>反汇编出 303 个类：新包名 <code>DingLing/pe/QuickJs/Engine/</code> 14 个，旧包名 <code>com/shadowmario/psychengine/</code> <strong>10 个同名类残留</strong>（MainActivity、MemoryInfoHelper、VulkanSurfaceHelper 及 7 个内部类）。两套 MainActivity 内容完全相同，都是空的 <code>GameActivity</code> 子类。改包名后未清理旧生成文件，白占约 170KB。</p>
+<h3>2.2 体积构成</h3>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>大小</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>lib/arm64-v8a/libApplicationMain.so</code></td>
+<td>49.6 MB</td>
+</tr>
+<tr>
+<td><code>lib/arm64-v8a/libvlc.so</code></td>
+<td>43.2 MB</td>
+</tr>
+<tr>
+<td><code>assets/assets/</code></td>
+<td>310 MB</td>
+</tr>
+<tr>
+<td>其余（liblime、libc++、dex、res）</td>
+<td>~10 MB</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>3. 资源构成</h2>
+<pre><code>assets/
+├── do NOT readme.txt          4,326 B   原版 FNF 的 readme
+├── modsList.txt               0 B       空文件
+└── assets/                    310 MB    游戏资源
+├── songs/                 151 MB
+├── shared/                 88 MB
+├── videos/                 27 MB
+├── week1..week7, weekend1  ~40 MB
+├── fonts/                 8.1 MB
+└── embed/                 11 KB
+</code></pre>
+<p>与上游 1.0 的资产清单（把 <code>assets/base_game/</code> 映射回 <code>assets/</code>）对比：</p>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上游 1.0 资产</td>
+<td>1,050</td>
+</tr>
+<tr>
+<td>APK 资产</td>
+<td>871</td>
+</tr>
+</tbody></table>
+<p>APK 独有的 34 项里，除 haxelib 的 flixel/flxanimate 资源外，是他自己加的 <code>vulkan_logo.png</code>、<code>opengl_logo.png</code>、<code>warn_icon.png</code>、<code>hitbox/</code>、<code>shared/scripts/demo.js</code>、<code>menu_demo.js</code> 等。</p>
+<p>这里的关键不是数量差，而是<strong>资源包的语言版本特征</strong>：拆分人声、<code>zh-CN.lang</code>、<code>weekend1/</code> 全部是 1.0 的约定（详见第 4 节）。</p>
+<hr>
+<h2>4. 基底版本：声明 0.7.3，实为 1.0</h2>
+<p>用 <code>.so</code> 内 187 个有效 <code>.hx</code> 路径（剔除 flixel/openfl/lime 等第三方库）分别与两个上游 tag 做交集：</p>
+<table>
+<thead>
+<tr>
+<th>基准</th>
+<th>上游文件数</th>
+<th>交集</th>
+<th>占项目</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>tag <code>0.7.3</code></td>
+<td>129</td>
+<td>96</td>
+<td>51.3%</td>
+</tr>
+<tr>
+<td>tag <code>1.0</code></td>
+<td>154</td>
+<td><strong>130</strong></td>
+<td><strong>69.5%</strong></td>
+</tr>
+</tbody></table>
+<p>更决定性的是不对称性：</p>
+<ul>
+<li><strong>34 个文件只存在于 1.0、0.7.3 里没有，而他全都有</strong>：
+<code>backend/Language.hx</code>、<code>options/LanguageSubState.hx</code>、<code>options/VisualsSettingsSubState.hx</code>、<code>options/NotesColorSubState.hx</code>、<code>states/ErrorState.hx</code>、<code>states/stages/PhillyStreets.hx</code>、<code>states/stages/PhillyBlazin.hx</code>、<code>states/stages/objects/ABotSpeaker.hx</code>、<code>states/editors/content/*</code>（8 个）、<code>objects/VideoSprite.hx</code> 等</li>
+<li><strong>0 个文件只存在于 0.7.3、1.0 里没有</strong></li>
+</ul>
+<p>资源侧独立印证：APK 含 <code>assets/weekend1/</code> 全套（Weekend 1 是 1.0 内容）、<code>Voices-Player.ogg</code> / <code>Voices-Opponent.ogg</code> 拆分人声（1.0 约定，0.7.3 是单个 <code>Voices.ogg</code>）、<code>assets/shared/data/zh-CN.lang</code>（1.0 的 i18n）。</p>
+<p><strong>结论</strong>：README 里 “based on the original Psych Engine 0.7.3” 与实际产物不符。</p>
+<h3>4.1 以 1.0 为基准的源码差集</h3>
+<p>项目 187 个文件，上游 1.0 的 154 个 → <strong>新增 57，缺失 24</strong>。</p>
+<p><strong>他删掉的（24）</strong></p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>psychlua/FunkinLua.hx</code></td>
+<td>Lua 解释器接入主体</td>
+</tr>
+<tr>
+<td><code>psychlua/CallbackHandler.hx</code></td>
+<td>Lua 回调分发</td>
+</tr>
+<tr>
+<td><code>psychlua/ExtraFunctions.hx</code></td>
+<td>扩展函数注册表</td>
+</tr>
+<tr>
+<td><code>psychlua/ReflectionFunctions.hx</code></td>
+<td>反射类函数</td>
+</tr>
+<tr>
+<td><code>psychlua/ShaderFunctions.hx</code></td>
+<td>着色器函数</td>
+</tr>
+<tr>
+<td><code>psychlua/TextFunctions.hx</code></td>
+<td>文本函数</td>
+</tr>
+<tr>
+<td><code>psychlua/DeprecatedFunctions.hx</code></td>
+<td>兼容层</td>
+</tr>
+<tr>
+<td><code>psychlua/FlxAnimateFunctions.hx</code></td>
+<td>FlxAnimate 绑定</td>
+</tr>
+<tr>
+<td><code>psychlua/HScript.hx</code></td>
+<td>HScript 封装（库本体仍在）</td>
+</tr>
+<tr>
+<td><code>flxanimate/PsychFlxAnimate.hx</code></td>
+<td>FlxAnimate 集成</td>
+</tr>
+<tr>
+<td><code>backend/Discord.hx</code></td>
+<td>移动端无 Discord</td>
+</tr>
+<tr>
+<td><code>shaders/BlendModeEffect.hx</code>、<code>OverlayShader.hx</code>、<code>WiggleEffect.hx</code></td>
+<td>三个着色器效果</td>
+</tr>
+<tr>
+<td><code>states/OutdatedState.hx</code>、<code>states/stages/Template.hx</code>、<code>unused/*</code>（7 个）、<code>import.hx</code></td>
+<td>版本提示页、模板、废弃代码</td>
+</tr>
+</tbody></table>
+<p><strong>他新增的（57，摘录）</strong></p>
+<ul>
+<li>脚本层：<code>backend/QuickJS.hx</code>、<code>psychlua/FunkinJS.hx</code>、<code>backend/ScriptContext.hx</code>、<code>backend/MenuScriptHost.hx</code></li>
+<li>渲染层：<code>backend/VulkanAndroid.hx</code>、<code>backend/RenderBackend.hx</code>、<code>render/ModRender.hx</code>、<code>render/ModShader.hx</code>、<code>shaders/ErrorHandledShader.hx</code>、<code>substates/VulkanWarningSubState.hx</code></li>
+<li>移动端：<code>mobile/</code> 下 14 个（MobileControls、VirtualPad、PianoKeys、MobileTextKeyboard 等）+ <code>options/MobileSettingsSubState.hx</code></li>
+<li>Android 桥：<code>android/Permissions.hx</code>、<code>android/Settings.hx</code>、<code>android/content/Context.hx</code>、<code>android/os/Build.hx</code></li>
+<li>后端杂项：<code>CrashLog</code>、<code>NativeCrashHandler</code>、<code>HitchLog</code>、<code>LoadTrace</code>、<code>FpsPanelApi</code>、<code>ScoreRank</code>、<code>NoteLanes</code>、<code>Physics</code>、<code>MenuUI</code>、<code>MenuNav</code>、<code>MenuGestures</code>、<code>ApiDocs</code>、<code>Qz7r</code>、<code>states/CustomMenuState.hx</code>、<code>states/SecurityNoticeState.hx</code></li>
+</ul>
+<hr>
+<h2>5. 脚本层：名字是 Lua 的，引擎是 JS 的</h2>
+<h3>5.1 Lua 运行时确实不存在</h3>
+<pre><code>^lua_[a-z]      0 条
+^luaL_[a-z]     0 条
+LuaJIT          0 条
+lua_newstate    0 条
+lua_pcall       0 条
+</code></pre>
+<h3>5.2 但 1.0 的 API 名一个不少</h3>
+<p>从上游 1.0 的 <code>source/psychlua/*.hx</code> 提取 <code>add_callback(lua, &quot;name&quot;, ...)</code> / <code>.set(&quot;name&quot;, ...)</code> 注册的函数名，共 <strong>219 个</strong>；在 APK 的 <code>.so</code> 中按原名存在 <strong>219 个（100%）</strong>。</p>
+<p><code>psychlua.FunkinJS</code> 暴露 124 个方法，注册器按域切分：</p>
+<pre><code>registerCoreFunctions      registerGameFunctions     registerGameFunctions2
+registerInputFunctions     registerMenuFunctions     registerFileFunctions
+registerBackendFunctions    registerAnimateFunctions
+</code></pre>
+<p>连 <code>psychlua.FunkinJS.initLuaShader</code> 这种名字里带 Lua 的方法都保留着。</p>
+<p><strong>结论</strong>：所谓“Lua 兼容”是<strong>函数名兼容</strong>，不是脚本兼容。219 个函数名齐全，却没有一行动能执行 <code>.lua</code> 文件——把 <code>makeLuaSprite(...)</code> 改写成 JS 语法后才能调用同名实现。</p>
+<h3>5.3 QuickJS 集成是真的</h3>
+<pre><code>backend.QuickJS.hx:
+new / eval / call / hasFunction / setGlobal / getGlobal
+runPendingJobs / handleNative / onDispatch / boot
+encodeResult / encodeArgs / parseResult / close
+底层: JS_NewRuntime2 / JS_Eval / JS_Call / JS_CallConstructor / JS_EvalFunction
+版本串: QuickJS memory usage -- 2026-06-04 version, %d-bit, malloc limit: %ld
+</code></pre>
+<hr>
+<h2>6. Vulkan：真实现了，但只是旁挂，且分辨率写死</h2>
+<h3>6.1 实现深度</h3>
+<p><code>libApplicationMain.so</code> 中出现 <strong>65 个不同的 <code>vk*</code> 函数</strong>，覆盖 instance/device、swapchain、render pass、pipeline、descriptor、command buffer、image 上传、present 全链路。</p>
+<p>边界同样明确：</p>
+<ul>
+<li><strong>单 render pass</strong>（<code>vkCmdBeginRenderPass</code> 只有一对），无深度附件、无 MSAA</li>
+<li>贴图槽<strong>硬上限 47</strong>：<code>[VulkanAndroid] texture slots are full (47), further sprites will not be drawn</code></li>
+<li>他自己写的说明：<code>OpenGL keeps running underneath until the Vulkan path fully replaces it, so switch back if anything looks wrong.</code> → 覆盖层，不是替换</li>
+<li>切换前弹 <code>substates/VulkanWarningSubState</code>，文案 <code>The Vulkan renderer is still experimental.</code></li>
+<li><strong>投影矩阵写死 1280×720</strong>：<code>mMat4Ortho(m, 0, 1280, 0, 720)</code> → Vulkan 路径把画面渲染在 1280×720，再拉伸到设备分辨率</li>
+</ul>
+<h3>6.2 Java 侧的 “VulkanSurfaceHelper” 是 Canvas 文字层</h3>
+<p>6,249 行 smali、57 个方法，<strong>不含任何 OpenGL/EGL/Vulkan API 调用</strong>（<code>android/opengl</code>、<code>javax/microedition/khronos</code>、<code>libvulkan</code> 命中均为 0）。实际调用是：</p>
+<pre><code>Canvas.drawText ×4     Paint.setTextSize / setColor / setShadowLayer
+Typeface.DEFAULT_BOLD  Bitmap.createBitmap / setPixel / getPixels / recycle
+</code></pre>
+<p>它管理一个 <code>SurfaceView</code>，把 Surface 交给 native，同时用 Canvas 画 HUD 文字；native 通过 <code>nativePushTextQuad</code>、<code>nativeSetHudValues</code>、<code>nativeGetHudLine</code> 与之通信。</p>
+<h3>6.3 关于“糊”和“崩”</h3>
+<p>issue 原文的时序是“切换到 Vulkan 后进 Weekend1，崩溃”。可对应的静态事实有两条：Vulkan 路径固定 1280×720 再拉伸（糊），以及贴图槽上限 47（Weekend1 的 PhillyStreets 场景素材数量明显超过该值，超限后直接跳过绘制）。<strong>但崩溃本身未做动态复现，不作为结论。</strong></p>
+<hr>
+<h2>7. 完整性校验：闭源之外还有防改</h2>
+<p><code>DingLing/pe/QuickJs/Engine/Qz7</code>（18.5KB smali）：</p>
+<ol>
+<li><code>b()/c()/d()</code> 取 <code>PackageInfo</code>、读签名（<code>GET_SIGNATURES</code>）</li>
+<li>遍历 ZIP 条目（<code>classes*.dex</code>、<code>assets/</code>、<code>lib/</code>、<code>res/</code>、<code>META-INF/</code>、<code>AndroidManifest.xml</code>、<code>resources.arsc</code>），用 SHA-256 逐项摘要，与内嵌 32 字节表比对（<code>v()[B</code>、<code>a(I)I</code> 按下标取 4 字节大端）</li>
+<li><code>okRoot(String)</code> / <code>okSo(String)</code> 检查 root 痕迹与 so 存在性</li>
+</ol>
+<p>对应 Haxe 侧 <code>backend/Qz7r.hx</code>（<code>boot</code>、<code>scriptsAllowed</code>）。失败文案：</p>
+<pre><code>This copy of the game was modified or re-signed.
+</code></pre>
+<p>含义：改包名、去 dex、换 so、重签名都会命中，命中后脚本功能被关。当前包 <code>debuggable=true</code> 且为 debug 签名，是测试构建而非 <code>r-</code> 正式版。</p>
+<hr>
+<h2>8. 协议合规性</h2>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上游 Psych Engine</td>
+<td>Apache License 2.0（GitHub API <code>license.spdx_id = Apache-2.0</code>）</td>
+</tr>
+<tr>
+<td>本项目仓库</td>
+<td><code>license: null</code>，README 明示“我不想走老一辈的老路”</td>
+</tr>
+<tr>
+<td>APK 内许可文件</td>
+<td>全量检索 `license</td>
+</tr>
+<tr>
+<td>归属声明</td>
+<td><code>Psych Engine by</code> 等字符串留在 <code>.so</code>，但无版权声明文本、无许可证副本、无 NOTICE</td>
+</tr>
+<tr>
+<td>第三方</td>
+<td><code>libvlc.so</code>（LGPL-2.1+）随包分发，无许可证与源码获取说明</td>
+</tr>
+</tbody></table>
+<p>Apache-2.0 <strong>允许</strong>闭源分发衍生作品，所以“闭源”本身不违约。争议在第 4 条：</p>
+<ul>
+<li><strong>§4(a)</strong> 向接收者提供许可证副本 —— 未提供</li>
+<li><strong>§4(b)</strong> 修改过的文件须保留显著修改声明 —— 无</li>
+<li><strong>§4(c)</strong> 保留原有版权、专利、商标、归属声明 —— 源码版权头随编译消失，仅剩非正式 credits</li>
+<li><strong>§4(d)</strong> 原作品含 NOTICE 时须附带 —— 未附带</li>
+</ul>
+<p><strong>准确表述</strong>：闭源合法，不带许可证副本与归属声明分发不合法。</p>
+<p>附带一条：README 声明基于 0.7.3，实际基于 1.0，这属于对来源的失实陈述——与许可义务是两件事，但同样影响可信度。</p>
+<hr>
+<h2>9. 与社区批评的逐条核对</h2>
+<table>
+<thead>
+<tr>
+<th>批评</th>
+<th>判定</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>删掉 Lua 却“兼容” Lua</td>
+<td><strong>成立</strong></td>
+<td>运行时符号 0；219 个 API 名 100% 保留</td>
+</tr>
+<tr>
+<td>引擎是 Psych 换皮</td>
+<td><strong>成立</strong></td>
+<td>原版命名、credits、130/187 文件重合</td>
+</tr>
+<tr>
+<td>Vulkan 完整度低</td>
+<td><strong>成立（有具体边界）</strong></td>
+<td>65 个 vk 函数但单 pass、47 槽、OpenGL 兜底、投影固定 720P、自称 experimental</td>
+</tr>
+<tr>
+<td>声明 0.7.3</td>
+<td><strong>不实</strong></td>
+<td>与 1.0 交集 130，与 0.7.3 仅 96；34 个 1.0 独有文件</td>
+</tr>
+<tr>
+<td>锁 720P</td>
+<td><strong>部分成立</strong></td>
+<td>Vulkan 投影矩阵写死 1280×720；OpenGL 路径未取证</td>
+</tr>
+<tr>
+<td>进场崩溃</td>
+<td><strong>未验证</strong></td>
+<td>需动态复现；47 槽上限是可对应的事实，非结论</td>
+</tr>
+<tr>
+<td>作者回复态度恶劣</td>
+<td><strong>有记录</strong></td>
+<td>issue #2：“用不惯就用别的引擎去 别搁这瞎逼逼”</td>
+</tr>
+<tr>
+<td>作者回复疑似 AI 生成</td>
+<td><strong>间接证据</strong></td>
+<td>issue #6 回复结尾附 <code>chat.deepseek.com/share/…</code></td>
+</tr>
+</tbody></table>
+<h2>10. 仓库结构</h2>
+<pre><code>.
+├── README.md                      本报告
+├── NOTICE.md                      反汇编内容的来源与许可
+├── LICENSE-APACHE-2.0.txt         Apache-2.0 全文
+├── report/report.html             排版版
+├── findings/                      关键发现摘录
+├── evidence/
+│   ├── AndroidManifest.xml
+│   ├── smali/                     303 个类的反汇编
+│   ├── native/                    QuickJS/Lua/路径/JNI 字符串、65 个 vk* 全表、1099 条 .hx 路径
+│   ├── data/                      vs_1.0_diff.json、assets_diff_10.json、Lua API 名单
+│   ├── upstream/ upstream10/      上游 0.7.3 与 1.0 的 psychlua 原文
+│   └── assets/assets-file-list.txt
+</code></pre>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#8</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">vibe coding engine</span>
+            <span class="archive-author">by Ajwyunsx</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>好消息：Psych 1.0换皮+QuickJS套壳，219个Lua函数名一个不少但运行时删得干干净净，&quot;兼容&quot;了个寂寞。坏消息：Vulkan写死720P再拉伸、贴图上限47超限直接不画、Apache-2.0的LICENSE和NOTICE全没给、反作弊比功能做得认真。视频说老手机不闪退——素材超47槽确实不闪退，因为直接没东西可渲了。作者被质疑AI代打时甩出一条带deepseek分享链接的回复，全仓库唯一的实锤是他自己递的。六个commit改同一个README，这就是&quot;引擎项目&quot;的全部源码。</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#9</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">在我看完其他issues的后续评价</span>
+            <span class="archive-author">by Lv233-Haxe</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>在笔者回家后看到了<a href="https://github.com/Wqawa/FuckYou_PE-QuickJs-Engine">两个issues</a>，都是有关该项目的<a href="https://baike.baidu.com/item/%E5%8F%8D%E5%90%91%E7%BC%96%E8%AF%91/9932384">反编译</a>结果</p>
+<img src="assets/issues/30d9cc85-4db4-4661-9153-0176ea91a5e7.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/0d88e01f-d9c3-45cf-a4f7-7d265aefa8ce.png" alt="Image" loading="lazy">
+
+<p>在现在看来笔者昨天说的都是<a href="https://kmcha.com/cidian/%E6%B2%A1%E9%94%99">没错</a>的</p>
+<img src="assets/issues/b324eff0-e3f0-42b5-b91c-f6fff1989d4e.png" alt="Image" loading="lazy">
+
+<p>单论将基底引擎从 <a href="https://github.com/ShadowMario/FNF-PsychEngine/releases#release-1.0">心理发动机1.0.0</a> 变成 <a href="https://github.com/ShadowMario/FNF-PsychEngine/releases#release-0.7.3">心理发动机0.7.3</a> 这件事情笔者就认为该<a href="https://github.com/rongtang2026">项目作者</a>可能患有以下<a href="https://baike.baidu.com/item/%E7%97%85%E7%97%87/307382">病症</a></p>
+<p><strong><em><a href="https://baike.baidu.com/item/%E6%99%BA%E5%8A%9B%E9%9A%9C%E7%A2%8D/276843">先天性脑部缺陷导致的智力障碍</a></em></strong></p>
+<p><strong><em><a href="https://health.baidu.com/m/detail/ar_6820528103813774490">先天性缺失21号染色体导致的智力低下</a></em></strong></p>
+<p><strong><em><a href="https://baike.baidu.com/item/%E8%BF%91%E8%A7%86/298638">后天性导致的眼部视力低下</a></em></strong></p>
+<img src="assets/issues/94974f7a-54c0-40ef-9e98-22083233dbcb.png" alt="Image" loading="lazy">
+
+<blockquote>
+<p><strong><em>有钱玩<a href="https://www.deepseek.com">溜溜梅</a>没钱配个<a href="https://baike.baidu.com/item/%E7%9C%BC%E9%95%9C/169796">眼镜</a>？</em></strong>
+<strong>笔者发出询问</strong></p>
+</blockquote>
+<p>首先我们来看第一点：<strong><a href="https://www.lua.org/">Lua</a> 运行时被整体移除，但 1.0 的 219 个 Lua API 函数名全部按原名保留，改由 <a href="https://bellard.org/quickjs/">QuickJS</a> 执行</strong></p>
+<p>很明显笔者使用了一个<a href="https://baike.baidu.com/item/%E6%99%AE%E6%9C%97%E5%85%8B%E6%97%B6%E9%97%B4/2429708">普朗克时间</a>就猜出来你肯定是命令<a href="https://www.deepseek.com">溜溜梅</a>把<a href="https://baike.baidu.com/item/LuaJIT/3455549">LuaJIT</a>丢进垃圾桶里面
+笔者认为这个应该是没错的
+但是你他妈都把LuaJIT丢进垃圾桶里面了，为什么不能把FunkinLua的函数删干净？</p>
+<blockquote>
+<p><strong>你他妈知不知道一个项目的<a href="https://www.zhihu.com/question/272065178">屎山</a>程度不仅仅由 <em>项目的代码实现复杂程度和垃圾程度</em>
+还由代码的 <em><a href="https://baike.baidu.com/item/%E5%BA%9F%E5%BC%83/8245835">废弃</a>但是未删除</em> 的比例决定</strong></p>
+</blockquote>
+<p>这可能你的<a href="https://www.deepseek.com/">溜溜梅</a>忘记了这件事情吧</p>
+<img src="assets/issues/73ee8dae-9220-4894-b182-876aaa6bc4f5.png" alt="Image" loading="lazy">
+
+<blockquote>
+<p><strong><em>正在工作的溜溜梅</em></strong></p>
+</blockquote>
+<p>很明显<a href="https://github.com/rongtang2026">项目作者</a>并没有意识到这一点，当<a href="https://github.com/rongtang2026/PE-QuickJs-Engine/">该发动机开源</a>的时候，观测<a href="https://github.com/rongtang2026/PE-QuickJs-Engine/">该发动机</a>源代码的开发者应该会大喊：<strong>我操！恶俗啊！</strong></p>
+<p>接下来我们看第二点：<em><em>_Vulkan 确实调了 Vulkan API（65 个 vk</em> 函数），但是旁挂渲染：OpenGL 仍在底下运行、单 render pass_</em>*</p>
+<p>首先我不明白在一个 2018 年发布的<a href="https://www.vulkan.org/">火山</a>版本都可以成功打死该项目的<a href="https://www.vulkan.org/">火山</a>后端完整度是什么一句话</p>
+<blockquote>
+<p>Vulkan 1.1 于 <strong>2018 年 3 月 7 日</strong>发布，<strong>总命令达到165条</strong> —— <strong><em>来自百度搜索结果</em></strong></p>
+</blockquote>
+<p>你敢用后端命令级别达不到1.1甚至1.0的<a href="https://www.vulkan.org/">火山</a>后端我敬你是条人物</p>
+<blockquote>
+<p><strong><em>笔者认为作者的不怕死程度堪比<a href="https://baike.baidu.com/item/%E9%B8%AD%E5%AD%90%E6%AD%BB%E4%BA%86%E5%98%B4%E5%B7%B4%E7%A1%AC/53743511">鸭子</a></em></strong></p>
+</blockquote>
+<p>虽然这个已经很雷霆了但是你不应该先考虑一下 <strong><em>OpenGL 仍在底下运行</em></strong> 这一条吗？</p>
+<img src="assets/issues/5d9d0b55-617a-4b75-b5be-2e618c3bb5e5.png" alt="Image" loading="lazy">
+
+<blockquote>
+<p><strong><em>OpenGL的广泛才是王道你那硬件不支持根本没人要，良好的性能才受大众喜爱你那垃圾性能早就被时代落败</em></strong></p>
+</blockquote>
+<p>笔者认为这两个东西应该是水火不容的东西不能在一起运行工作，但是该项目告诉我其实是可以的
+<strong>在这里万分感谢该项目改正了笔者的误区</strong>
+笔者使用未使用<a href="https://www.deepseek.com/">溜溜梅</a>而是使用<a href="https://health.baidu.com/m/detail/ar_7473414732541676534">健康</a>的<a href="https://baike.baidu.com/item/%E5%A4%A7%E8%84%91/791360">大脑</a>就想到了渲染后端应该由 <strong>Lime提供OpenFL启动时选择后端</strong></p>
+<blockquote>
+<p><strong><em>笔者使用一个<a href="https://baike.baidu.com/item/%E6%99%AE%E6%9C%97%E5%85%8B%E6%97%B6%E9%97%B4/2429708">普朗克时间</a>推测应该是该<a href="https://github.com/rongtang2026">项目作者</a>大手一挥<a href="https://www.deepseek.com">溜溜梅</a>直接造出了此<a href="https://baike.baidu.com/item/%E7%8B%97%E5%B1%8E/2354738">狗屎</a>Vulkan</em></strong></p>
+</blockquote>
+<p>下一条：<strong><em>包内存在完整性校验：签名证书 SHA-256、签名者数、debuggable 标志、APK 条目白名单，改包触发 &quot;This copy of the game was modified or re-signed.&quot;</em></strong></p>
+<blockquote>
+<p><strong><em>你他妈开源都不敢还搞个<a href="https://baike.baidu.com/item/%E6%A0%A1%E9%AA%8C/6445047">校验</a>？我操，这真他妈<a href="https://baike.baidu.com/item/%E5%82%BB%E9%80%BC/977754">傻逼</a>！</em></strong></p>
+</blockquote>
+<p>下一条：<strong><em>当前最新发布 1.1（2026-11-04）就是本包，debuggable=true、debug 签名，按作者自定规则不算正式版</em></strong></p>
+<blockquote>
+<p>笔者认为没什么好说的，只能说确实可能<a href="https://github.com/rongtang2026">项目作者</a>可能患有
+<a href="https://baike.baidu.com/item/%E8%BF%91%E8%A7%86/298638">后天性导致的眼部视力低下</a>
+还是那句话：<strong><em>有钱玩溜溜梅没钱配个眼镜？</em></strong></p>
+</blockquote>
+<p><code>Assets - 310MB</code></p>
+<blockquote>
+<p>笔者认为作者可能是使用溜溜梅并没有仔细审查过项目
+不知道CopyState是什么于是复制了自己<a href="https://baike.baidu.com/item/%E7%8B%97%E5%B1%8E/2354738">溜溜梅</a>告诉自己的东西来回复我</p>
+</blockquote>
+<p>在最后笔者再次呼吁大家：保护智力障碍人群！纯<a href="https://baike.baidu.com/item/%E5%82%BB%E9%80%BC/977754">傻逼</a>除外
+这就是个<a href="https://baike.baidu.com/item/%E5%82%BB%E9%80%BC/977754">傻逼</a>！</p>
+<img src="assets/issues/13c37569-7935-4c4c-8bf5-efb67a348412.png" alt="Image" loading="lazy">
+
+<p>如果<a href="https://github.com/rongtang2026">项目作者</a><strong>对有持有怀疑我的专业性的态度</strong>，<strong>欢迎打开我的Github主页查成分</strong></p>
+<blockquote>
+<p><strong><em>如果看不懂笔者也为您准备了这个</em></strong></p>
+</blockquote>
+<img src="assets/issues/dfa87e66-ee12-46c0-a115-7dfd5dc618e7.png" alt="Image" loading="lazy">
+
+<p>ED.</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#10</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">从北狐群高高在上的嘉豪，到bilibili超级无敌标题党 --- 一个溜溜梅引擎是如何炼成的?</span>
+            <span class="archive-author">by IceTheAxe</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>灵感---&gt; <a href="https://cubk.cn/articles/design-philosophy-through-openclaw">https://cubk.cn/articles/design-philosophy-through-openclaw</a></p>
+<p>自信闪光嘉豪魔改psych engine 不知道什么版本反正一脚踹飞hscript和lua自信放下超级无敌大文档觉得所有人都会看自己手动把模组lua和hscript改成他最爱的js.
+哦不不不为什么作为一个基础的游戏引擎居然还要我对模组进行手动修改以获得约等于滚木的提升才能进行玩耍
+既然做了那也不做到底反正把结束换成j就行了那为什么不直接帮我把lua换成js
+评价是没有十年脑血栓做不出来这样的引擎</p>
+<p>首先看高能发言
+<img src="assets/issues/42d8c204-cabd-4ec4-851a-e48888fa61ab.png" alt="Image" loading="lazy"></p>
+<img src="assets/issues/0b3f1752-a714-4364-aece-388b4c374093.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/eee3ee1d-d2c5-4fcb-a126-168efafd3d11.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/e4f7eac1-aac0-41d9-aa38-dcd60bd55341.png" alt="Image" loading="lazy">
+
+<p>我去 居然是引擎自带的<a href="https://github.com/HaxeFoundation/hxcpp/">hxcpp</a><a href="https://haxe.org/manual/target-cpp-ThreadsAndStacks.html#:~:text=hxcpp%20uses%20a%20conservative%20stop-the-world%20GC%2C%20where%20the,not%20change%20GC%20pointers%20in%20the%20collection%20phase.">内存探测器</a>??!! 不得不相信了!
+主播自己做的东西看的舍得打不开<a href="https://cn.bing.com/search?q=windows%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86%E5%99%A8&cvid=c66486f085f84b3186280b7d0153fb36&gs_lcrp=EgRlZGdlKgYIABAAGEAyBggAEAAYQDIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEAyBggJEAAYQNIBCDI4NTlqMGo0qAIIsAIB&FORM=ANAB01&PC=U531">Windows任务管理器</a>进行一个查看 搞半天原来是如同滚木一般的GPU Cache发力了!
+<img src="assets/issues/b91fc702-04ad-46ca-a2af-03a89697c08c.png" alt="Image" loading="lazy"></p>
+<img src="assets/issues/373a6469-b44a-4a6b-9591-cbdb7032e82a.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/aeb71a23-65bf-4814-8f3a-cb479160effb.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/99e650b8-29ac-44e3-8834-9726d1403ab6.png" alt="Image" loading="lazy">
+[(你狐狸大人也是被这一坨大狗分震惊到了)](https://space.bilibili.com/511083372)
+<img src="assets/issues/f985c54d-623c-4cc2-9dfb-372ab1ecaca4.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/d794069f-b926-4da9-a206-a7fac46297a8.png" alt="Image" loading="lazy">
+
+<p>(首先排除做这个的是人)</p>
+<img src="assets/issues/8257eff5-321b-4bf8-bce2-7e88ed129fb9.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/8f37dfe2-156a-4306-9e06-55d5c5149199.png" alt="Image" loading="lazy">
+
+<p>其次就是宁<a href="https://www.bilibili.com/video/BV1Lvxx6vE8n/">视频</a>所谓18年手机流畅运行大型模组辣</p>
+<img src="assets/issues/edc06229-66ba-4179-8ef8-f2c2e692a2b3.png" alt="Image" loading="lazy">
+
+<p>18年手机在哪呢 <a href="https://cn.bing.com/search?q=%E6%BB%9A%E6%9C%A8&cvid=74e70d733f064010952a33befcd869cd&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEAyBggJEAAYQNIBBzg5MmowajmoAgiwAgE&FORM=ANAB01&PC=U531">大型模组</a>在哪呢 请问宁的338MB的APK里不能复制出来的Assets就是大型模组了吗 </p>
+<p>以及这个我看一次笑一次的简介和评论</p>
+<img src="assets/issues/5c1b2105-51e2-414c-982c-935d887552c8.png" alt="Image" loading="lazy">
+
+<p>建议下次在和溜溜梅交流时使用项目记忆 而不是使用人工记忆 因为下一秒</p>
+<img src="assets/issues/b164f32b-3080-4a7f-9e0f-47a106a1265e.png" alt="Image" loading="lazy">
+
+<p>注意到  这个所谓类人生物上下文疑似不足300 前脚说完比pe兼容性更上一层楼 后脚就说只兼容<a href="https://baike.baidu.com/item/JavaScript/321142">js</a>! 不兼容 <a href="https://baike.baidu.com/item/lua/7570719">LUA</a>! 搞半天原来这个兼容性指的是我还要自己手动把lua脚本end换成j再脱裤子放屁把lua改成.js! 这无疑是令人难绷的</p>
+<p>更难绷的是 前文提到的雷霆大文档 以及评论区的傻逼狗托
+<em>这样都能有狗托你圈直接等死吧</em></p>
+<img src="assets/issues/c256e296-bc4a-45ea-801b-c5afa7ba3faa.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/3dd12095-ed28-4fef-8e21-32ef1aae58a2.png" alt="Image" loading="lazy">
+
+<p>你的意思是 我作为一个正常玩家 要使用这个溜溜梅引擎 还要我先自己把mod改好 才能运行?
+评价为豪情在天的嘉豪随手一个指令造出了一坨溜溜梅大狗使并发布到bilibili进行一个流量的雷霆大吃然后再买几个狗托进行一个雷霆大洗地
+好吧 如同前面几个issue提到的 作者如同丢失了<a href="https://baike.baidu.com/item/%E7%9C%BC/4216399">心灵的窗户</a> 看不到溜溜梅基于psych engine 1.0.4构建的源码并坚称此为psych engine 0.7.3 </p>
+<img src="assets/issues/e2297b59-52b4-4eec-96c9-901961f9361d.png" alt="Image" loading="lazy">
+
+<p>总之我再无话说 建议作者好自为之 停止使用豪情在天的语言高高在上批判hscript和lua 并修改标题为 我用溜溜梅搓了一坨大狗使 快点来吃。</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#11</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">最客观的评论</span>
+            <span class="archive-author">by D-C-LushiFu</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p align="center">
+<img src="assets/issues/apache-badge.svg" alt="Image" loading="lazy">
+<img src="assets/issues/LICENSE%2520FILES-0-critical.png" alt="Image" loading="lazy">
+<img src="assets/issues/STATUS-UNFIXED-critical.png" alt="Image" loading="lazy">
+<img src="assets/issues/HYPOCRISY-100%2525-critical.png" alt="Image" loading="lazy">
+</p>
+
+<p align="center">
+<b>PE-QuickJs-Engine</b> · 基于 <a href="https://github.com/ShadowMario/FNF-PsychEngine">FNF-PsychEngine 0.7.3</a> · 上游 <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a><br/>
+<sub>一个对外分发了不知道多少个版本、解包后 LICENSE 副本数量为 <b>0</b> 的“纯移动端重建”</sub>
+</p>
+
+<hr>
+<blockquote class="alert alert-caution"><p><span class="alert-label">CAUTION</span> </p>
+<h2>我操！你他妈的 <a href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a> 呢？？？</h2>
+<p>你基于 <a href="https://github.com/ShadowMario/FNF-PsychEngine">ShadowMario/FNF-PsychEngine</a>（<a href="https://github.com/ShadowMario/FNF-PsychEngine/blob/master/LICENSE">Apache License 2.0</a>）做了一个“纯移动端重建”，<a href="https://github.com/rongtang2026/PE-QuickJs-Engine/releases">对外分发过</a>不止一个版本，解包一看——</p>
+<p><strong><a href="https://issues.apache.org/jira/browse/LEGAL-642">LICENSE 副本：没有。</a> <a href="https://www.apache.org/licenses/LICENSE-2.0#redistribution">NOTICE：没有。</a> <a href="https://github.com/ShadowMario/FNF-PsychEngine">ShadowMario 的版权声明：不知道飞哪去了。</a> 骂人的话：到处都有。</strong></p>
+<p><strong>一边吃 <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a> 的饭，一边把 <a href="https://www.apache.org/licenses/LICENSE-2.0#redistribution">§4(a)</a> 当厕纸，一边在 <a href="https://github.com/rongtang2026/PE-QuickJs-Engine">README</a> 里骂给你饭吃的人是“<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">半吊子</a>”和“<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">无脑玩意</a>”。</strong></p>
+<p>这不是行为艺术。这是<strong>行为艺术的行为艺术的行为艺术</strong>。</p>
+</blockquote>
+<hr>
+<details open>
+<summary><h2>📌 证据一：上游 LICENSE 从 2021 年 7 月 7 日就在那里，你没有“不知道”的余地</h2></summary>
+
+<p><a href="https://github.com/ShadowMario/FNF-PsychEngine">ShadowMario/FNF-PsychEngine</a> 的 <code>LICENSE</code> 文件在 <strong>Initial commit（<a href="https://github.com/ShadowMario/FNF-PsychEngine/commits/master">2021-07-07</a>）</strong> 时就已经躺在仓库根目录了。<strong>Apache License 2.0，版权方 ShadowMario</strong>。</p>
+<p>你 fork 也好，重建也好，魔改也好——<strong>你不可能没看见那个文件</strong>。它就叫 <code>LICENSE</code>，全大写，和 <code>README.md</code> 并排躺在根目录。</p>
+</details>
+
+<hr>
+<details open>
+<summary><h2>📌 证据二：Apache 2.0 第 4(a) 条，没有“但是”，没有“我觉得”，没有“debug build 不算”</h2></summary>
+
+<p><a href="https://www.apache.org/licenses/LICENSE-2.0#redistribution">Apache License 2.0 第 4 条</a>：</p>
+<blockquote>
+<p>You may reproduce and distribute copies of the Work or Derivative Works thereof in any medium, with or without modifications, and in Source or Object form, <strong>provided that You meet the following conditions</strong>:</p>
+<p><strong>(a) You must give any other recipients of the Work or Derivative Works a copy of this License</strong>;</p>
+</blockquote>
+<p><a href="https://issues.apache.org/jira/browse/LEGAL-642">Apache 官方 LEGAL-642</a> 讨论说得很清楚：<strong>4(a) 的措辞是 “give a copy”</strong>——不是“给个链接”，不是“在 README 里提一嘴”，是<strong>把副本给到接收者手里</strong>。</p>
+<p><strong>你给到接收者手里的 APK 里，没有 LICENSE。</strong> 那就没有满足 4(a)。<strong>没有解释空间。没有“我下次一定”。没有“这只是 debug 版”。</strong></p>
+</details>
+
+<hr>
+<details open>
+<summary><h2>📌 证据三：你的分发记录，是一条持续违反 4(a) 的时间线</h2></summary>
+
+<table>
+<thead>
+<tr>
+<th align="left">时间点</th>
+<th align="left">动作</th>
+<th align="center"><a href="https://www.apache.org/licenses/LICENSE-2.0#redistribution">Apache 2.0 §4(a)</a></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>第一个 release 之前</strong></td>
+<td align="left"><a href="https://github.com/rongtang2026/PE-QuickJs-Engine/releases">对外分发</a>，<strong>什么许可证都没有</strong></td>
+<td align="center">❌ <strong>未满足</strong></td>
+</tr>
+<tr>
+<td align="left"><a href="https://github.com/rongtang2026/PE-QuickJs-Engine">README</a> 声称</td>
+<td align="left">“自 v1.1.0 起包含 LICENSE &amp; NOTICE”</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td align="left"><strong>新版本解包</strong></td>
+<td align="left"><strong>依旧没有任何许可证文件</strong></td>
+<td align="center">❌ <strong>持续未满足</strong></td>
+</tr>
+<tr>
+<td align="left">APK 内部</td>
+<td align="left"><a href="https://github.com/rongtang2026/PE-QuickJs-Engine">骂人话到处都有</a></td>
+<td align="center">—</td>
+</tr>
+</tbody></table>
+<blockquote class="alert alert-warning"><p><span class="alert-label">WARNING</span> <strong>“对外分发”不是“发正式 release”才触发的。</strong> <a href="https://baike.baidu.com/item/%E7%BD%91%E7%9B%98">网盘链接</a>、公开可访问的仓库、发给<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">社区成员 Sky</a> 的测试包——在 <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a> 面前，统统叫**<a href="https://www.apache.org/licenses/LICENSE-2.0#redistribution">分发</a>**。</p>
+<p><strong>你递出去的每一个没有 LICENSE 副本的包，都是一次 §4(a) 违规。</strong></p>
+</blockquote>
+</details>
+
+<hr>
+<details open>
+<summary><h2>📌 证据四：不是“禁止”，是<a href="https://www.apache.org/licenses/LICENSE-2.0#termination">许可自动终止</a>，而你看起来根本没打算补救</h2></summary>
+
+<p><a href="https://www.apache.org/licenses/LICENSE-2.0#termination">Apache 2.0 第 5.1 条</a>：</p>
+<blockquote>
+<p>The rights granted under this License <strong>will terminate automatically</strong> if You fail to comply with any of its terms. However, if You become compliant, then the rights granted under this License from a particular Contributor are reinstated... <strong>and You become compliant prior to 30 days after Your receipt of the notice.</strong></p>
+</blockquote>
+<p>翻译成人话：<strong>条件不满足 → 许可自动终止 → 继续分发可能落入<a href="https://baike.baidu.com/item/%E7%89%88%E6%9D%83%E4%BE%B5%E6%9D%83">版权侵权</a>。</strong> 补救窗口是<strong>知道违约后的 30 天</strong>。</p>
+<p><a href="https://github.com/rongtang2026/PE-QuickJs-Engine">README</a> 说“自 v1.1.0 起包含 LICENSE &amp; NOTICE”。<strong>解包结果：没有。</strong> 那这 30 天窗口有没有被认真对待，是一个<strong>不需要猜</strong>的问题。</p>
+<blockquote class="alert alert-important"><p><span class="alert-label">IMPORTANT</span> <strong>闭源 ≠ 免合规。</strong> <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a> <strong>不要求你公开源码</strong>。但闭源分发<strong>必须</strong>给 LICENSE 副本、<strong>必须</strong>保留 ShadowMario 的版权声明、<strong>必须</strong>处理 NOTICE。<strong>这三件事，解包结果一件都没有做。</strong></p>
+</blockquote>
+</details>
+
+<hr>
+<details open>
+<summary><h2>📌 证据五：一边“最高敬意”，一边“无脑玩意”</h2></summary>
+
+<p><a href="https://github.com/rongtang2026/PE-QuickJs-Engine">README</a> 开头：</p>
+<blockquote>
+<p><em>“I have the utmost respect for the original authors and pay my highest tribute to them.”</em></p>
+</blockquote>
+<p>同一份 README：</p>
+<blockquote>
+<p><em>“Just a bunch of half-baked amateurs...”</em></p>
+<p><em>“It&#39;s because of you brainless beggars.”</em></p>
+<p><em>“这个圈子没救了。”</em></p>
+</blockquote>
+<blockquote class="alert alert-note"><p><span class="alert-label">NOTE</span> 生气可以。被<a href="https://baike.baidu.com/item/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B">逆向</a>、被<a href="https://baike.baidu.com/item/%E4%BC%B8%E6%89%8B%E5%85%9A">伸手党</a>骚扰，烦，<a href="https://baike.baidu.com/item/%E6%AD%A3%E5%B8%B8">正常</a>。</p>
+<p><strong>问题在于你生气时站的那块<a href="https://baike.baidu.com/item/%E9%81%93%E5%BE%B7%E9%AB%98%E5%9C%B0">道德高地</a>，地基是空的。</strong></p>
+<p>一个连 <a href="https://www.apache.org/licenses/LICENSE-2.0#redistribution">Apache 2.0 第 4(a) 条</a>——<strong>最基础、最没有解释空间、Apache 官方专门开 <a href="https://issues.apache.org/jira/browse/LEGAL-642">LEGAL-642</a> 讨论过的那一条</strong>——都没有履行的人，用“<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">最高敬意</a>”开头，用“<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">无脑玩意</a>”收尾。</p>
+<p><strong>这不是“态度不好”。这是行为艺术。</strong></p>
+</blockquote>
+<p>还有那句 <strong>“<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">100% built with AI</a>”</strong>。AI 做的没问题。<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">Sky 的 itel P663L 测试</a>也证明引擎确实能跑。<strong>但 AI 不会自动帮你把 <a href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a> 塞进 APK，AI 也不会自动帮你保留 <a href="https://github.com/ShadowMario">ShadowMario</a> 的版权声明。</strong> 合规责任是你的，<a href="https://baike.baidu.com/item/%E6%BA%9C%E6%BA%9C%E6%A2%85">不是溜溜梅的</a>。</p>
+</details>
+
+<hr>
+<blockquote class="alert alert-warning"><p><span class="alert-label">WARNING</span> </p>
+<h2>所以，把话说直</h2>
+<p><strong>1.</strong> 上游是 <strong><a href="https://github.com/ShadowMario/FNF-PsychEngine/blob/master/LICENSE">Apache 2.0</a></strong>。</p>
+<p><strong>2.</strong> 你 <strong><a href="https://github.com/rongtang2026/PE-QuickJs-Engine/releases">对外分发</a>过</strong>。§4(a) 在<strong>分发发生的那一刻</strong>就生效了。</p>
+<p><strong>3.</strong> 你的 APK 里 <strong><a href="https://issues.apache.org/jira/browse/LEGAL-642">没有 LICENSE 副本</a></strong>。不是“忘了发 release”，是<strong>分发本身触发了义务</strong>。</p>
+<p><strong>4.</strong> <a href="https://github.com/rongtang2026/PE-QuickJs-Engine">README</a> 说“自 v1.1.0 起包含 LICENSE &amp; NOTICE”。<strong>解包结果如果与之矛盾，那是<a href="https://baike.baidu.com/item/%E5%A3%B0%E6%98%8E%E4%B8%8D%E5%AE%9E">声明不实</a>。</strong></p>
+<p><strong>5.</strong> 在自身违反 §4(a) 的情况下，用“<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">半吊子</a>”“<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">无脑玩意</a>”嘲讽社区——<strong><a href="https://baike.baidu.com/item/%E5%8F%8C%E9%87%8D%E6%A0%87%E5%87%86">双标</a>程度拉满。</strong></p>
+</blockquote>
+<hr>
+<blockquote class="alert alert-caution"><p><span class="alert-label">CAUTION</span> <strong>把 <a href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a> 放进 APK。保留 <a href="https://github.com/ShadowMario">ShadowMario</a> 的版权声明。检查 <a href="https://www.apache.org/licenses/LICENSE-2.0#redistribution">NOTICE</a>。把 <a href="https://github.com/rongtang2026/PE-QuickJs-Engine">README</a> 里那些“半吊子”“无脑玩意”删了，换成一句“本项目闭源，禁止未经授权的逆向与再分发”。</strong></p>
+<p><strong>边界照样立得住。而且不用一边违反 <a href="https://www.apache.org/licenses/LICENSE-2.0#redistribution">§4(a)</a>，一边骂别人“半吊子”。</strong></p>
+<h3>你骂别人“半吊子”的时候，<a href="https://www.apache.org/licenses/LICENSE-2.0#redistribution">Apache 2.0 §4(a)</a> 正在看着你。</h3>
+</blockquote>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#12</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">致敬fnf圈内第2个被反编译爆源码的引擎</span>
+            <span class="archive-author">by beihu235</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>第一个是vslice 0.3.0，作为一个溜溜梅开发的引擎竟然也有如此待遇，实在是可喜可贺</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#13</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">没想到从学校回来还有大狗分吃</span>
+            <span class="archive-author">by mohong2</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>我不知道你到底是用哪里想出来的把<strong>Lua</strong>给换成的<strong>JS</strong>
+你是希望还有人在PE上面给你转成js吗？
+不兼容原版PE的模组那做这个引擎还有什么意义？
+你难道希望把CNE给干飞吗？</p>
+<p>我也不想过多评价</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#14</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">国内最强的史诗级引擎</span>
+            <span class="archive-author">by azmlpoh</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>干掉了lua
+毙掉了hscript
+新添了QuickJs
+还是lua写法😍😍😍😍😍😍😍😍😍</p>
+<p>我的妈呀 这个引擎太牛逼了 这个让我刮目想看
+0.7.3结果是1.0.4😍😍😍😍</p>
+<p>以及怎么还有古董级别的按键😍😍😍😍😍</p>
+<p>lua后缀改成js 闭合end 改 {}😍😍😍😍😍这个相想真***太牛逼了</p>
+<p>还拿CNE当盾 哇哇哇😍😍😍😍😍😍😍😍😍😍😍😍😍😍😍😍😍😍😍😍😍😍😍😍😍</p>
+<p>以及超模的优化😍😍😍😍😍😍  肥牛饭即将迎来大变😍😍😍😍😍😍😍 100%AI  +  神秘态度作者  造出来的超**引擎</p>
+<p>让新的光明鼓掌**🙏🙏🙏🙏🙏🙏** 我去怎么还给我闪瞎了😭😭😭😭😭😭</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-closed">
+          <summary>
+            <span class="archive-num">#15</span>
+            <span class="archive-state">CLOSED</span>
+            <span class="archive-title">滚木</span>
+            <span class="archive-author">by Dingdang255</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<blockquote class="alert alert-important"><p><span class="alert-label">IMPORTANT</span> <strong>AAA构式疲乏R哥</strong></p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <em>已品鉴一滩沟水</em></li>
+</ul>
+</blockquote>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#16</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">本项目已经开源</span>
+            <span class="archive-author">by Lv233-Haxe</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>我并不知道某些人装模作样的以为自己成功逆向了，连自定义 API 都不知道，依旧是一群半吊子。我真搞不懂，难不成弄一个新的魔改引擎就必须把整个界面的 UI 风格全变了吗？</p>
+<p>但是吧，我承认确实有些地方可能有点小 Bug，那只不过是因为盲目做自定义 API 忘了。还有，这个项目确实 100% 是 AI 做的。</p>
+<p>我终于明白为什么那么多作者都停止甚至跑路了，还是因为你们这帮无脑玩意和伸手党。唉，怪不得说这个圈子没救了。</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#17</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">对于README更新的意见</span>
+            <span class="archive-author">by Lv233-Haxe</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>很明显，项目作者在看到笔者的开源版本已经急眼
+因为他根本看不懂我开源的是什么，反编译还原的又是什么，只能使用溜溜梅无能狂怒憋出一个新的readme</p>
+<p>可是笔者认为在项目作者写README时应该经过实际考察和大脑的思考
+而不是在一时愤怒之下憋出一个业内人士看了只会说：这他妈脑子有病吧！</p>
+<p>虽然笔者认为本来花费我的儿子网络5.5和旮旯木5.3闪光的额度来搞你这坨屎很浪费
+奈何笔者确实是没事干了于是便边看番边搞你这坨大狗屎的逆向</p>
+<p>对于回应这个读我.妈的：</p>
+<p>第一条“如果你连像IDA这样的逆向工程工具都不知道，请不要随便评论”</p>
+<p>笔者认为写代码的大约有两类人</p>
+<blockquote>
+<p>1.在没有溜溜梅的时候就开始写代码的人，后来转入溜溜梅进行辅助开发
+2.在溜溜梅出现的时候才开始写代码的人，后来转入溜溜梅进行主要开发</p>
+</blockquote>
+<p>虽然看着好像就差了几个字，但是笔者认为这两者的差别非常大
+很明显该项目作者就是第二种人，笔者经过推测得出结论</p>
+<blockquote>
+<p>如果没有溜溜梅你这十年内都不可能发布出这个项目</p>
+</blockquote>
+<p>为何笔者敢如此笃定这个结论？</p>
+<p>首先从README.妈的我们就可以看出，这大概率是一个使用溜溜梅翻译的README.妈的，因为这段英语没有任何口癖并且用词异常谨慎</p>
+<blockquote>
+<p>连一个README.妈的都懒得自己写，就可以看出你根本不可能会很有耐心的学习编程
+就连笔者的反编译开源版的README.妈的都是手写的而不是用溜溜梅生成</p>
+</blockquote>
+<p>再然后项目作者曾说过</p>
+<blockquote>
+<p>Cne引擎的仓库真是烂透了
+你们自己都不兼容lua凭啥我要去兼容
+还想骂我
+你们到底搞不搞笑
+我甚至看到了作者抱怨社区太乱了
+我也不跟你们吵了，你们自己好好想去吧
+那么多同名仓库还有alpha贝塔版本。</p>
+</blockquote>
+<p>这种话
+笔者认为只要是使用过Github的人基本都会查看域名推断是谁的仓库
+甚至Github本来就有Fork的标识
+这你还认不出？
+可能是后天性的眼部疾病</p>
+<p>就算抛了骂仓库这段就论”CNE不兼容lua凭什么要我去兼容&quot;笔者还是认为你就是一个纯粹的傻逼
+因为CNE用的是高度扩展过的Hscript，功能对比原版多了不是一星半点儿
+而且他还是用的该引擎的语言当脚本的，笔者请问Haxe和JavaScript有任何关系吗？
+为了用你这个引擎还得多学习一门脚本语言，那可真搞笑</p>
+<p>从以上内容我们可以看出项目作者大约是一个只会依赖溜溜梅进行反击和长篇大论甚至我认为可能到现在一点Haxe都不会的人
+你会写HelloWorld吗？</p>
+<blockquote>
+<p>我认为你可能连这个都不会</p>
+</blockquote>
+<p>而且我认为能在issues指手画脚甚至骂你的人，都是上述的第一种人</p>
+<p>第二条”我无法保证那个假仓库的作者是否秘密植入了病毒。如果你下载并运行，别怪我，去找他们吧。“</p>
+<p>首先笔者开源版的仓库内主要包含了以下文件</p>
+<blockquote>
+<p>.hx
+.txt
+.html
+.json
+.js
+.bat</p>
+</blockquote>
+<p>笔者认为这些文件除了.bat可能有让你的机器有爆炸风险其他是肯定没有危险性的文件的东西
+甚至bat文件是可以查看的而不是机器码二进制需要反编译才可以查看的高级物品
+笔者不明白你为什么会说出毫无逻辑的话</p>
+<p>但是从这句话暴露了项目作者大概率就是一个无知，愚蠢的人
+笔者曾被质疑过：在Lime.ndll塞后门
+可是鲜有人知的是lime的c++后端连发包都做不到，简直是空谈
+更奇异搞笑的是：我发布的真正有价值的仅有Haxe源代码，如果是新手你可能都不会编译得到产物
+并且通过Hxcpp生成的程序绝对并且100%是机器生成的，也就是说你的恶意代码一般都是在杀毒软件特征库内的了
+可能还来不及感染就被杀进程了吧</p>
+<blockquote>
+<p>笔者认为溜溜梅时代降低编程的门槛在一定程度上是坏事，简直是让狗也能分一杯羹</p>
+</blockquote>
+<p>第三条”我已经检查过了，如果你真的相信那个空壳，你就无可救药了。”</p>
+<p>虽然笔者已经看到你在QQ发言被截出特别雷霆的截图
+笔者简单阐述以下内容</p>
+<p>项目作者 使用 DeepSeekAPP 中的 Chat 模式，未开启 深度思考 功能，来分析我的仓库
+并且断言笔者的仓库还原的所有文件都是空壳子</p>
+<p>那真是抱歉了你看这张图片吧</p>
+<img src="assets/issues/03b256a1-3c0f-468d-a67a-a26629657273.png" alt="Image" loading="lazy">
+
+<blockquote>
+<p>使用JavaScript脚本在MainMenu中创建了一个BF人物</p>
+</blockquote>
+<p>笔者认为使用比文件夹大小确认是否是空壳的方式真的很蠢，相信了这一条的项目作者母庸质疑的是一个蠢逼
+综上所述：笔者认为该项目作者是一个</p>
+<ul>
+<li>无知，无条件相信AI模型</li>
+<li>懒惰，依赖AI模型编程</li>
+<li>敷衍，回复Issues时使用AI回复</li>
+<li>恶劣，在README.妈的添加辱骂内容</li>
+<li>傲慢，认为自己很编程很强，高高在上</li>
+<li>自大，认为自己项目很好</li>
+</ul>
+<p>的傻逼，笔者曾说过一句话</p>
+<blockquote>
+<p>笔者重来不反对使用AI合成的项目，笔者反对的是使用AI合成的无脑/不审查/垃圾的项目</p>
+</blockquote>
+<p>并且你非常自以为是
+为什么issues的人甚至NovaFlareEngine的程序员都不会支持你</p>
+<blockquote>
+<p>这是你应该思考的问题</p>
+</blockquote>
+<p>第四条：“照顾好自己。”</p>
+<blockquote>
+<p>这是你对自己的话。</p>
+</blockquote>
+<p>ED.</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#18</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">针对于https://github.com/rongtang2026/PE-QuickJs-Engine/commit/9f7aea7aa661bb75dedc4ebabd8b184ffae039e3这个提交</span>
+            <span class="archive-author">by mohong2</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<h2>关于本次提交及相关论断的回应</h2>
+<blockquote>
+<p>本次提交仅修改了 <code>README.md</code>，改动内容为：</p>
+<p><em>If you don&#39;t even know what a reverse-engineering tool like IDA is, please don&#39;t comment randomly. I cannot guarantee whether the author of that fake repo secretly embedded viruses. If you download and run it, don&#39;t blame me, go find them. I&#39;ve already checked it, and if you truly believe in that empty shell, you are beyond saving. Take care of yourselves.</em></p>
+</blockquote>
+<h3>一、关于“已经论证过”的说法</h3>
+<p>我并不认为你已经完成论证。原因很明确：你使用的是 <strong>DeepSeek Chat 网页端</strong>进行分析。根据相关聊天记录，可以看出这种分析方式存在明显问题。</p>
+<p>一个聊天端 DeepSeek，在仅仅具备网页搜索能力的情况下，就直接断定 <a href="https://github.com/Lv233-Haxe/Open-QuickJs-Engine">Open-QuickJs-Engine</a> 是一个空壳项目。这个结论与事实完全不符。</p>
+<p>相关聊天截图：</p>
+<img src="assets/issues/8eb27770-c1a8-4d75-9c28-d40e29969d95.png" alt="Image" loading="lazy">
+
+<h3>二、关于“缺失 <code>FunkinJS.hx</code>”的说法</h3>
+<p>我至今没搞懂，你是如何在<strong>不开启深度思考</strong>的情况下直接去问的。</p>
+<p>截图中所说的“缺失的 <code>FunkinJS.hx</code>”，在 Open-QuickJs-Engine 中并没有缺失。详见：</p>
+<ul>
+<li><a href="https://github.com/Lv233-Haxe/Open-QuickJs-Engine/blob/main/source/psychlua/FunkinJS.hx">FunkinJS.hx</a></li>
+</ul>
+<p>更何况，这是一个在没有任何 agent 环境下的模型。该结论很明显是<strong>模型幻觉</strong>和<strong>网页获取问题</strong>共同造成的。</p>
+<img src="assets/issues/029b175f-8dfa-4316-b925-1bcad54e869a.png" alt="Image" loading="lazy">
+
+<h3>三、关于公开聊天记录的问题</h3>
+<p>说白了，我没看懂你是怎么敢把这些聊天记录直接发出来的。</p>
+<h3>四、关于把 Lua JIT 换成 JS 的操作</h3>
+<p>把 Lua JIT 换成 JS 这波操作，我也属实没看懂。</p>
+<p>建议先看一下实际运行效率，再讨论这种替换是否合理。</p>
+<h3>五、总结</h3>
+<ul>
+<li>听信 AI 谗言，坚信 JS 效率能比 Lua JIT 高。主要问题在于，这个 JS 看起来像是 Hscript 爆改的。</li>
+<li>拿一个网页端 AI 瞎分析，分析依据和结论都经不起核对。</li>
+<li>你比隔壁的 Forbric 还厉害。人家好歹知道开源；你这源都不开了。</li>
+<li>人家好歹是为了兼容其他模组；你这是直接把兼容都删了，盐都不盐了。</li>
+</ul>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#19</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">引擎开发者针对项目的意见</span>
+            <span class="archive-author">by HEIHUAa</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>你有没有勇气看完全文做出回应呢?</p>
+<p>如果某一些人还想说又是一个半吊子，哦不，我算是CNE引擎部分功能开发的提交者，CNE引擎内制作人榜单里面有我名字，如果说这还算半吊子那是不是可以认为所有的CNE开发者都是错误的，包括开发模组的? 如果你觉得都是错的那你去跟他们说吧，他们很愿意别人提问题的。还是说你觉得他们太强大了，有足够的实力你说的话他们不会听? 又或者说是你觉得他们从2022年几乎纯手写代码构建引擎的实力在你眼前还不够我正眼看他们?
+我还参与了大量高质量模组哦不那些模组也是错的吗?你认为你想要知道是哪一些我可以发，不过还有大量的文段所以先不列举。注意我说的是可以列举哦，而不是说不能说。</p>
+<p>好吧我们不说这些我知道你想比实力，好的让我们看看
+是谁在AI时代后才开始写代码的，你赢了。
+是谁非常聪明的在github发布安装包却没有发布源码，开源协议直接当空气的，你又赢了。
+项目被别人反编译开源还说不确定有没有病毒的，哦还是你赢。
+是谁手动写代码都写不明白就开始用AI写代码了，还是你赢了。
+是谁用AI分析反编译代码连思考都不敢开，开了就暴露了，你赢赢赢，用Deepseek app只会迎合你的情绪，我看你的精神已经饱满，ai只是略施小计就让你又可以开心过好一天，多好的事啊。
+是谁只发布安卓端连桌面端都不发布呢，你已经赢到脚趾尖了。
+是谁把所有人当半吊子但是没有查过他们真实实力呢，你身边满是奖杯。
+是谁只敢在背后悄悄议论，连正面对抗都不敢，是不是辩论的理由找不了那么快呢，你已经躺赢了。</p>
+<p>所以说到底是谁在影响整个圈子呢，还不就是你，你你你，要不要想想为什么那么多人反对你呢，到底是自己的错还是别人的呢，别人的错那也只能是了解情况不够啊，可是你这都摆到面前了信息都充足了，甚至都是依据你说的来反对的。那问题出在谁身上? 还是说你就只是觉得自己那么辛苦用AI搞出来这么个东西，就可以不看质量直接说他最厉害、最强了? 我可以这么说你的辛苦一文不值。一文不值。</p>
+<p>小朋友<strong>luajit</strong>可是<strong>标准理想情况</strong>有<strong>c++ 90%<strong>的运行速度哦，你牛逼的&quot;<strong>JS解释器</strong>&quot;是相当于 <em>c++百分之几的运行速度</em> ? 如果说运行速度超越c++你会被我们笑掉大牙的
+JS</strong>解释器</strong>，哦不，难道是用haxe代码写的JS代码语法运行? 如果是这样的话那连<strong>c++ 1%<strong>的性能都不如，你说的</strong>JS性能该不会JS代码被运行的方式都没有弄明白吧</strong></p>
+<p>有没有弄懂开源协议开源协议是必须的，而且不遵守开源协议也是错的，小朋友你犯法了。别跟我说犯法在哪，这一点都不知道那你有何用? 小朋友信息可不能全都是别人你都要自己搜，用AI来帮你搜我会笑的</p>
+<p>我第1次在fnf看见用README来回怼人的，哦不你是什么异类吗? 有问题光明正大的直接在别人说的话下方说行不行? 反正都公开了不是一样的吗? 还是说你想直接把这份话直接贴脸到所有来看你项目的人? 你已经默认了所有来看你项目的都会来攻击你? 很好笑了兄弟</p>
+<p>我在想你是继续自我感动还是咋样呢，好吧我知道这应该由你来决定</p>
+<p>我同时也很好奇假设没有AI你能走得多远，在原地踏步吗</p>
+<p>不过我觉得你看完肯定会哑口无言，你但凡漏了一件事没有反对那就代表你认可我说的那句，千万不要不回应哦，不回应那就是你认可了。你想找到地方反对我吗? 你肯定想你想到爆炸! 但是你要往哪里想呢，好吧这个有趣的事情让你来提出，这真的很有意思，你是在QQ群里面又偷偷议论见不得光的说，还是直接在提问下方回复我呢，好期待啊
+又或者说直接骂了我，你骂有啥用呢，来来来多骂点，看看你词汇量咋样。
+而且你最好别直接跳到结尾来看我会笑的。赶紧给我回去看完了再看这里。别跟我说不听我的话，如果说你是看完了才看到这里那好吧我觉得你不会完整看完我把你看得太低了。</p>
+
+          </div>
+        </details>
+        <details class="archive-item is-open">
+          <summary>
+            <span class="archive-num">#20</span>
+            <span class="archive-state">OPEN</span>
+            <span class="archive-title">何移位的措辞&amp;理由以及行为露馅</span>
+            <span class="archive-author">by Wqawa</span>
+            <span class="archive-caret" aria-hidden="true">＋</span>
+          </summary>
+          <div class="issue-body">
+<p>自从<a href="https://www.bilibili.com/video/BV1Lvxx6vE8n/">发布</a>后，（作者）这里肯定没少被<a href="https://baike.baidu.com/item/%E9%AA%82/4832373">骂</a>。
+所以，我将会以<a href="https://music.163.com/#/song?id=2094776628">最直接、最真相、最不绕弯、最扎心、最硬核、最干脆、最不墨迹、最戳痛点、最不留情面、最一针见血、最开门见山、最单刀直入、最不铺垫、最不客套、最不煽情、最不废话、最不拐弯、最不磨叽、最不装、最不端着、最不啰嗦、最不拖沓、最不委婉、最不掩饰、最不藏着掖着、最直白、最露骨、最实在的结论</a>依次<a href="https://baike.baidu.com/item/%E5%88%86%E6%9E%90/4327108">分析</a>对比患有以下<a href="https://baike.baidu.com/item/%E7%96%BE%E7%97%85/925932">疾病</a></p>
+<p><a href="https://health.baidu.com/m/detail/ar_5783761498413488068#:~:text=%E8%AF%AD%E8%A8%80%E8%A1%A8%E8%BE%BE%E8%83%BD%E5%8A%9B%E5%B7%AE%E6%9C%AC%E8%BA%AB%E4%B8%8D%E6%98%AF%E4%B8%80%E7%A7%8D%E7%8B%AC%E7%AB%8B%E7%9A%84%E7%96%BE%E7%97%85%EF%BC%8C%E4%BD%86%E5%8F%AF%E8%83%BD%E6%98%AF%E6%9F%90%E4%BA%9B%E7%97%85%E7%90%86%E5%9B%A0%E7%B4%A0%E6%88%96%E5%BF%83%E7%90%86%E9%97%AE%E9%A2%98%E7%9A%84%E8%A1%A8%E7%8E%B0%EF%BC%8C%E4%B9%9F%E5%8F%AF%E8%83%BD%E6%98%AF%E5%90%8E%E5%A4%A9%E7%BC%BA%E4%B9%8F%E8%AE%AD%E7%BB%83%E5%AF%BC%E8%87%B4%E7%9A%84%E6%8A%80%E8%83%BD%E7%9F%AD%E6%9D%BF%E3%80%82%20%E6%98%AF%E5%90%A6%E5%B1%9E%E4%BA%8E%E3%80%8C%E7%97%85%E3%80%8D%E9%9C%80%E8%A6%81%E7%BB%93%E5%90%88%E4%B8%AA%E4%BD%93%E5%B9%B4%E9%BE%84%E3%80%81%E7%97%87%E7%8A%B6%E7%89%B9%E5%BE%81%E5%8F%8A%E6%88%90%E5%9B%A0%E7%BB%BC%E5%90%88%E5%88%A4%E6%96%AD%EF%BC%8C%E5%8F%AF%E9%80%9A%E8%BF%87%E4%B8%93%E4%B8%9A%E8%AF%84%E4%BC%B0%E6%98%8E%E7%A1%AE%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E5%B9%B2%E9%A2%84%E3%80%82%201.,%E7%97%85%E7%90%86%E7%9B%B8%E5%85%B3%E6%80%A7%E5%9B%A0%E7%B4%A0%20%E7%A5%9E%E7%BB%8F%E7%B3%BB%E7%BB%9F%E7%96%BE%E7%97%85%EF%BC%9A%E5%A6%82%E8%87%AA%E9%97%AD%E7%97%87%E8%B0%B1%E7%B3%BB%E9%9A%9C%E7%A2%8D%EF%BC%88%E4%BC%B4%E9%9A%8F%E7%A4%BE%E4%BA%A4%E6%B2%9F%E9%80%9A%E5%9B%B0%E9%9A%BE%EF%BC%89%E3%80%81%E8%84%91%E6%8D%9F%E4%BC%A4%E3%80%81%E5%A4%B1%E8%AF%AD%E7%97%87%E7%AD%89%EF%BC%8C%E5%8F%AF%E8%83%BD%E7%9B%B4%E6%8E%A5%E5%AF%BC%E8%87%B4%E8%AF%AD%E8%A8%80%E7%BB%84%E7%BB%87%E9%9A%9C%E7%A2%8D%E3%80%82%20%E5%90%AC%E5%8A%9B%E6%88%96%E5%8F%91%E9%9F%B3%E5%99%A8%E5%AE%98%E5%BC%82%E5%B8%B8%EF%BC%9A%E5%85%88%E5%A4%A9%E6%80%A7%E5%90%AC%E5%8A%9B%E9%9A%9C%E7%A2%8D%E6%88%96%E5%A3%B0%E5%B8%A6%E3%80%81%E5%8F%A3%E8%85%94%E7%BB%93%E6%9E%84%E9%97%AE%E9%A2%98%EF%BC%8C%E5%8F%AF%E8%83%BD%E5%BD%B1%E5%93%8D%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E5%92%8C%E8%A1%A8%E8%BE%BE%E3%80%82">!大脑语言模块萎缩!</a>
+<a href="https://baike.baidu.com/item/%E7%9B%B2%E5%AD%90/2009685">?先天&amp;后天性失明?</a>
+<a href="https://baike.baidu.com/item/%E6%A8%A1%E5%9B%A0/52705585">-重度模因污染-</a>
+<a href="https://zhuanlan.zhihu.com/p/20996286701">↓遗传性智力问题↓</a>
+<a href="https://www.cnblogs.com/pDJJq/p/18778065/llm-dependence-thinking-outsourcing-cognitive-atrophy-2irp50">↑溜溜梅严重依赖症↑</a>
+<a href="https://baike.baidu.com/item/%E8%87%AA%E5%A4%A7%E5%A6%84%E6%83%B3%E7%97%87/1285588">自大症</a>
+<a href="https://baike.baidu.com/item/%E8%A2%AB%E5%AE%B3%E5%A6%84%E6%83%B3%E7%97%87/644819">被害妄想症</a>
+<a href="https://baike.baidu.com/item/%E5%80%94%E5%BC%BA/608">城墙脸皮</a></p>
+<p>的<a href="https://space.bilibili.com/3546917455792249">“无辜”宣发</a>&amp;他的<a href="https://space.bilibili.com/3747561405943059">豪情在天的作者&amp;没长脑子的狗托&amp;欺软怕硬的出生</a>的<a href="https://baike.baidu.com/item/%E8%A8%80%E8%AE%BA%E8%87%AA%E7%94%B1/1520804">言论</a></p>
+<p>我自己都<a href="https://baike.baidu.com/item/%E6%88%91%E7%AC%91%E4%BA%86/50818365">笑了</a>，还是因为<a href="https://wiki.scpzh.org/%E9%A6%96%E9%A1%B5?variant=zh-cn">SCP基金会</a>根本不存在要不然为什么遍地<a href="https://baike.baidu.com/item/%E5%BC%82%E5%B8%B8/33341">异常</a>类人生物</p>
+<p>首先，<a href="https://www.hanyuguoxue.com/chengyu/ci-9d2fcaab9">万恶之源</a>之</p>
+<h2>——————发布前</h2>
+<img src="assets/issues/de196989-da31-44a3-9ae2-19e513b5c993.png" alt="Image" loading="lazy">
+
+<p>这谁<a href="https://baike.baidu.com/item/%E5%81%87%E5%A6%82%E6%88%91%E7%BB%B7%E4%BD%8F%E4%BA%86%E5%91%A2/67834270">绷住了</a>可以被<a href="https://baike.baidu.com/item/%E5%90%89%E7%B1%B3%C2%B7%E5%94%90%E7%BA%B3%E5%BE%B7%E6%A3%AE/63996140">野兽先生</a><a href="https://baike.baidu.com/item/%E5%A5%96%E5%8A%B1/984484">奖励</a>100w<a href="https://wenku.baidu.com/view/8fadb808ad8271fe910ef12d2af90242a995ab59.html">刀乐</a>
+就不说<a href="https://baike.baidu.com/item/%E5%86%85%E5%AE%B9/869297">内容</a>吧，这段<a href="https://baike.baidu.com/item/%E5%8F%91%E8%A8%80/4577070">发言</a>是个<a href="https://baike.baidu.com/item/%E6%98%8E%E7%9C%BC%E4%BA%BA/2729136">明眼人</a>就能看出来
+　　卧槽，<a href="https://www.zhihu.com/question/50098328">学渣</a>啊！
+　　这段文字可以看出作者的<a href="https://www.un.org/zh/observances/mother-language-day">母语</a>发言能力堪比一个<a href="https://baike.baidu.com/item/%E6%88%90%E5%B9%B4%E4%BA%BA/68626672">成年</a><a href="https://baike.baidu.com/item/%E9%A6%99%E8%95%89/150475">大香蕉</a>
+　　你可以在短短几行文字中找到
+　　　　Cne 大小写<a href="https://baike.baidu.com/item/%E6%B7%B7%E4%B9%B1/33651">混乱</a>；“<a href="https://baike.baidu.com/item/%E5%BC%95%E6%93%8E/2874935">引擎</a>的<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">仓库</a>”<a href="https://zhuanlan.zhihu.com/p/509847889">语义重复</a>；
+　　　　缺少“连”字，“都”字悬空（“连你们自己都<a href="https://baike.baidu.com/item/%E5%85%BC%E5%AE%B9%E6%80%A7/1446869">不兼容</a>”才通）；lua 大小写混乱；一句话里塞了两个<a href="https://baike.baidu.com/item/%E5%88%86%E5%8F%A5/2484516">分句</a>且无<a href="https://symbols.tplusstudio.com/zh-CN/symbols/punctuation">标点</a>；
+　　　　<a href="https://zhuanlan.zhihu.com/p/166221321">主语脱落</a>；“还想”<a href="https://baike.baidu.com/item/%E8%AF%AD%E4%B9%89/65241012">语义</a>不对
+　　　　<a href="https://baike.baidu.com/item/%E8%B0%93%E8%AF%AD/2016328">缺谓语</a>的残句；“还有”后缺<a href="https://baike.baidu.com/item/%E9%87%8F%E8%AF%8D/10830424">量词</a>；alpha 用英文、beta 用<a href="https://baike.baidu.com/item/%E9%9F%B3%E8%AF%91/2246716">音译</a>，中英混排不统一；<a href="https://baike.baidu.com/item/%E5%8F%A5%E5%8F%B7/2584">句号</a>与全篇<a href="https://baike.baidu.com/item/%E8%AF%AD%E6%B0%94/9624317">语气</a>不符，是<a href="https://baike.baidu.com/item/%E8%B4%A8%E9%97%AE/1588702">质问</a>应作<a href="https://baike.baidu.com/item/%E9%97%AE%E5%8F%B7/24766">问号</a></p>
+<p>说回<a href="https://baike.baidu.com/item/%E5%86%85%E5%AE%B9/869297">内容</a>，你怎么知道CNE烂透了？怎么看到作者发言了？同名仓库是啥，你所谓的PE - quickJS吗？我们怎么也要<a href="https://baike.baidu.com/item/%E5%8F%8D%E6%80%9D/35707">反思</a>？（莫非作者真有<a href="https://nao.cas.cn/fast/">天眼</a>看到<a href="https://zhuanlan.zhihu.com/p/438815316">4维空间</a>？？）</p>
+<p>*我已<a href="https://baike.baidu.com/item/%E5%93%AD/2330597">急哭</a></p>
+<img src="assets/issues/5e627bdf-35d0-40ab-8d0b-9ff21510ba23.png" alt="Image" loading="lazy">
+
+<h2>第二关：——————发布后</h2>
+<img src="assets/issues/5a693407-c9fd-4942-beba-63a4603b6e5c.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/018688cb-2837-4830-ad81-03e2f7bc2678.png" alt="Image" loading="lazy">
+
+<p>哦不不不你怎么给你PE<a href="https://baike.baidu.com/item/%E7%81%B5%E9%AD%82/73763">灵魂</a><a href="https://baike.baidu.com/item/%E6%8B%86%E5%8D%B8/6714692">拆</a>了</p>
+<img src="assets/issues/4f3818e2-f4c2-4f7b-8b03-6d510879e7e9.png" alt="Image" loading="lazy">
+
+<p>这么做好比你买了一台<a href="https://baike.baidu.com/item/%E5%86%B0%E7%AE%B1/28303">冰箱</a>，你嫌冰箱难用给冰箱<a href="https://zhuanlan.zhihu.com/p/17360579542">压缩机</a>拆了换成[冰块](<a href="https://www.thepaper.cn/newsDetail_for">https://www.thepaper.cn/newsDetail_for</a></p>
+<p>...(content truncated)</p>
+
+          </div>
+        </details>
+      </div>
+      </div>
+    </div>
+  </section>
 
 </main>
 
-<footer class="site-footer">
+<footer class="footer">
   <div class="wrap footer-inner">
-    <span>RealQuickJS Engine · 在这里写版权或一句话</span>
-    <a href="https://github.com/Wqawa/realQuickJS_Engine" target="_blank" rel="noopener">此页面的 GitHub 仓库</a>
+    <div class="footer-brand">
+      <span class="brand-mark brand-mark-sm" aria-hidden="true">RQ</span>
+      <span>RealQuickJS Engine</span>
+      <span class="muted">基于 Psych Engine 1.0.4</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine" target="_blank" rel="noopener">引擎仓库 ↗</a>
+      <a href="https://github.com/Wqawa/realQuickJS_Engine" target="_blank" rel="noopener">本页仓库 ↗</a>
+      <span class="muted">© <span id="year">2026</span></span>
+    </div>
   </div>
 </footer>
 
