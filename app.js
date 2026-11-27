@@ -77,6 +77,21 @@
     sections.forEach(function (s) { spy.observe(s); });
   }
 
+  /* ---------- 侧边目录高亮 ---------- */
+  var railLinks = Array.prototype.slice.call(document.querySelectorAll('.section-rail a[data-rail]'));
+  var railTargets = railLinks.map(function (a) { return document.getElementById(a.getAttribute('data-rail')); }).filter(Boolean);
+  if ('IntersectionObserver' in window && railTargets.length) {
+    var railSpy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        railLinks.forEach(function (a) {
+          a.classList.toggle('is-active', a.getAttribute('data-rail') === entry.target.id);
+        });
+      });
+    }, { rootMargin: '-20% 0px -68% 0px', threshold: 0 });
+    railTargets.forEach(function (t) { railSpy.observe(t); });
+  }
+
   /* ---------- 复制按钮 ---------- */
   Array.prototype.forEach.call(document.querySelectorAll('.copy-btn'), function (btn) {
     btn.addEventListener('click', function () {

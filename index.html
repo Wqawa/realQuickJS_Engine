@@ -45,6 +45,29 @@
   </div>
 </header>
 
+<aside class="section-rail" aria-label="章节目录">
+  <span class="rail-title mono">INDEX</span>
+  <nav class="rail-nav">
+    <a href="#top" data-rail="top">00 <span>首页</span></a>
+    <a href="#features" data-rail="features">01 <span>特性</span></a>
+    <a class="rail-sub" href="#f-trees" data-rail="f-trees">三棵树</a>
+    <a class="rail-sub" href="#f-lua" data-rail="f-lua">老脚本</a>
+    <a class="rail-sub" href="#f-js" data-rail="f-js">QuickJS</a>
+    <a class="rail-sub" href="#f-version" data-rail="f-version">版本后缀</a>
+    <a class="rail-sub" href="#f-crash" data-rail="f-crash">崩溃屏</a>
+    <a class="rail-sub" href="#f-isolation" data-rail="f-isolation">脚本隔离</a>
+    <a href="#engines" data-rail="engines">02 <span>引擎</span></a>
+    <a href="#notes" data-rail="notes">03 <span>兼容</span></a>
+    <a href="#download" data-rail="download">04 <span>下载</span></a>
+    <a href="#docs" data-rail="docs">05 <span>文档</span></a>
+    <a href="#upstream" data-rail="upstream">06 <span>上游</span></a>
+    <a href="#community" data-rail="community">07 <span>参与</span></a>
+    <a href="#pillory" data-rail="pillory">08 <span>处刑</span></a>
+    <a href="#build" data-rail="build">09 <span>本体</span></a>
+    <a href="#archive" data-rail="archive">10 <span>档案</span></a>
+  </nav>
+</aside>
+
 <main id="top">
 
   <section class="hero">
@@ -116,51 +139,51 @@
       </header>
 
       <ol class="feature-list">
-        <li class="feature-row" data-reveal>
+        <li class="feature-row" id="f-trees" data-reveal>
           <span class="feature-num" aria-hidden="true">01</span>
           <div class="feature-main">
-            <h3>三套引擎，一个可执行文件</h3>
-            <p>本体 fork、原版 Psych 1.0.4、Psych 0.6.3 三棵树并排放在同一个 exe 里。启动时读 <code>engine.txt</code> 分叉，源码、资产、mods 目录各自独立。</p>
+            <h3>三套引擎，一个 exe</h3>
+            <p><code>body</code>、<code>vanilla</code>、<code>pe063</code> 三棵树编在一起。选项里选完写进 <code>engine.txt</code>，下次启动走各自的源码、素材和 mods 目录。</p>
           </div>
-          <span class="feature-tag" aria-hidden="true">body / vanilla / pe063</span>
+          <span class="feature-tag" aria-hidden="true">engine.txt</span>
         </li>
-        <li class="feature-row" data-reveal>
+        <li class="feature-row" id="f-lua" data-reveal>
           <span class="feature-num" aria-hidden="true">02</span>
           <div class="feature-main">
-            <h3>老 mod 零改动</h3>
-            <p>目标写得很直白：0.6.3 / 0.7.3 时代的 mod 不改一行脚本、不换一次资源，拖进去就能跑。</p>
+            <h3>老脚本照原样跑</h3>
+            <p>0.6.3 / 0.7.3 的 Lua 回调名、裸类名、<code>ClientPrefs</code> 字段和旧对象路径都补了兼容层。改过哪些、还差哪些写在 <code>docs/LUA_COMPAT.md</code>。</p>
           </div>
           <span class="feature-tag" aria-hidden="true">0.6.3 → 1.0.4</span>
         </li>
-        <li class="feature-row" data-reveal>
+        <li class="feature-row" id="f-js" data-reveal>
           <span class="feature-num" aria-hidden="true">03</span>
           <div class="feature-main">
-            <h3>真 JS，不是文字游戏</h3>
-            <p>内置 QuickJS-NG 运行时与宿主桥协议。不是把 <code>{</code> 替换成 <code>end</code> 就宣称支持 JavaScript 的那种做法。</p>
+            <h3>真 JS，不是转译</h3>
+            <p>在 <code>Gameplay Settings → JS Engine</code> 选 QuickJS，<code>.js</code> 就交给 QuickJS-NG：一个文件一个 context，一首歌结束回收。默认的 Troll 仍走原来的 Lua 转译。</p>
           </div>
           <span class="feature-tag" aria-hidden="true">quickjs-ng</span>
         </li>
-        <li class="feature-row" data-reveal>
+        <li class="feature-row" id="f-version" data-reveal>
           <span class="feature-num" aria-hidden="true">04</span>
           <div class="feature-main">
-            <h3>按文件名伪造引擎版本</h3>
-            <p>有些 mod 的 Lua 里写死了 <code>if version == '0.6.3' then …</code>。给单个脚本加后缀，就能只让那一个脚本看到它想要的版本号。</p>
+            <h3>按文件名改版本</h3>
+            <p>脚本名加 <code>(%run_v_0.6.3)</code>，只有这个脚本读到的 <code>version</code> 变成 0.6.3，其余不受影响。HScript 也能用。</p>
           </div>
           <span class="feature-tag" aria-hidden="true">%run_v_0.6.3</span>
         </li>
-        <li class="feature-row" data-reveal>
+        <li class="feature-row" id="f-crash" data-reveal>
           <span class="feature-num" aria-hidden="true">05</span>
           <div class="feature-main">
             <h3>统一的崩溃屏</h3>
-            <p>三侧共用一个拦截器：先把错误和调用栈落盘到 <code>crash/</code>，再切进引擎内崩溃屏，可以退出，也可以直接回当前侧主菜单。</p>
+            <p>错误先写进 <code>crash/PsychEngine_&lt;时间&gt;.txt</code>，再进崩溃屏。<code>QUIT</code> 退出，<code>MAIN MENU</code> 或 <code>M</code>/<code>ESC</code> 回当前侧主菜单。</p>
           </div>
           <span class="feature-tag" aria-hidden="true">crash/</span>
         </li>
-        <li class="feature-row" data-reveal>
+        <li class="feature-row" id="f-isolation" data-reveal>
           <span class="feature-num" aria-hidden="true">06</span>
           <div class="feature-main">
-            <h3>脚本互相隔离</h3>
-            <p>三棵树的 <code>Paths</code> 与 import 别名表彼此隔离，同名的 <code>scripts/</code> 不会串味，装了一堆老 mod 也不会互相顶掉。</p>
+            <h3>脚本不串味</h3>
+            <p>三棵树的 <code>Paths</code> 和 import 别名各自带前缀，同名 <code>scripts/</code> 不会互相顶掉。修过哪几处写在 <code>docs/SCRIPT_ISOLATION_AUDIT.md</code>。</p>
           </div>
           <span class="feature-tag" aria-hidden="true">isolation</span>
         </li>
@@ -1029,7 +1052,6 @@ export/&lt;mode&gt;/windows/bin/             构建产物，engine.txt 在这里
           <p class="bili-ref mono">cv53912757</p>
       </div>
 
-      <div class="archive-list" data-reveal>
       <div class="archive-list" data-reveal>
         <details class="archive-item is-closed">
           <summary>
@@ -2267,9 +2289,120 @@ JS</strong>解释器</strong>，哦不，难道是用haxe代码写的JS代码语
 <p>哦不不不你怎么给你PE<a href="https://baike.baidu.com/item/%E7%81%B5%E9%AD%82/73763">灵魂</a><a href="https://baike.baidu.com/item/%E6%8B%86%E5%8D%B8/6714692">拆</a>了</p>
 <img src="assets/issues/4f3818e2-f4c2-4f7b-8b03-6d510879e7e9.png" alt="Image" loading="lazy">
 
-<p>这么做好比你买了一台<a href="https://baike.baidu.com/item/%E5%86%B0%E7%AE%B1/28303">冰箱</a>，你嫌冰箱难用给冰箱<a href="https://zhuanlan.zhihu.com/p/17360579542">压缩机</a>拆了换成[冰块](<a href="https://www.thepaper.cn/newsDetail_for">https://www.thepaper.cn/newsDetail_for</a></p>
-<p>...(content truncated)</p>
+<p>这么做好比你买了一台<a href="https://baike.baidu.com/item/%E5%86%B0%E7%AE%B1/28303">冰箱</a>，你嫌冰箱难用给冰箱<a href="https://zhuanlan.zhihu.com/p/17360579542">压缩机</a>拆了换成<a href="https://www.thepaper.cn/newsDetail_forward_13851025">冰块</a>，<a href="https://baike.baidu.com/item/%E6%95%88%E7%8E%87/868847">降效增本</a>就算了，你给我拆好了啊，压缩机的线还留着</p>
+<img src="assets/issues/6fedafaa-50d4-4c47-a135-cff2a011e8a3.png" alt="Image" loading="lazy">
 
+<p>（注意：<a href="https://baike.baidu.com/item/%E8%BF%90%E8%A1%8C%E6%97%B6/3335184">运行时</a>移除是在代码执行的时候对着<a href="https://www.lua.org/">lua</a>直接来了个destory，而不是从<a href="https://baike.baidu.com/item/%E6%BA%90%E4%BB%A3%E7%A0%81/3587471">源代码</a>在<a href="https://www.runoob.com/w3cnote/working-process-of-the-compiler.html">编译</a>前就从<a href="https://baike.baidu.com/item/%E7%94%B5%E8%84%91%E7%A1%AC%E7%9B%98/8686272">硬盘</a>上物理移除。并且我<a href="https://baike.baidu.com/item/%E6%8E%A8%E6%B5%8B/3011282">推测</a>，是不是因为lua根深蒂固拆不掉导致只能用js+同名<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Functions">函数</a>顶上）</p>
+<img src="assets/issues/281237c0-a77a-4303-9f53-49543bc5896f.png" alt="Image" loading="lazy">
+
+<p>你可能疑惑怎么还能开发一键<a href="https://baike.baidu.com/item/%E8%BD%AC%E5%8C%96/5545339">转化</a>？</p>
+<img src="assets/issues/75b69c92-dffc-43ff-acc8-03d6c118be83.png" alt="Image" loading="lazy">
+
+<p>答：这tm是靠<a href="https://github.com/ShadowMario/FNF-PsychEngine">PE</a>的1.0<a href="https://baike.baidu.com/item/%E5%85%BC%E5%AE%B9%E6%80%A7/1446869">兼容性</a>硬顶着，所谓<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript">js</a>实际上就是<a href="https://baike.baidu.com/item/%E8%B7%B3%E6%9D%BF/35705">跳板</a>跳来跳去最后还是由一个被砍废的<a href="https://www.cnblogs.com/lemon-le/p/13840014.html">解释器</a>运行，甚至只用改一下<a href="https://baike.baidu.com/item/%E6%8B%AC%E5%8F%B7/999048">闭合符</a>&amp;<a href="https://baike.baidu.com/item/%E6%96%87%E4%BB%B6%E6%89%A9%E5%B1%95%E5%90%8D/1270230">后缀</a>就行了，你说好的
+<img src="assets/issues/7fc0fefa-b8a4-4fe4-bbfb-2a837f4a31ab.png" alt="Image" loading="lazy"> 然后
+<img src="assets/issues/98288770-48c0-4f36-a386-a19b5168c6ee.png" alt="Image" loading="lazy"> 顺手
+<img src="assets/issues/07bfbb6b-156a-44b2-8ab4-b23f37b3f9de.png" alt="Image" loading="lazy"> 最后 <img src="assets/issues/321798e9-ef97-4b93-8ab5-7f39a2ae246a.png" alt="Image" loading="lazy"></p>
+<p>PE如果是<a href="https://baike.baidu.com/item/%E6%B4%BB%E4%BA%BA/514783">活人</a>高低给你<a href="https://baike.baidu.com/item/%E7%A3%95%E5%A4%B4/4492211">磕一个</a></p>
+<p>还是冰箱，你看起来给冰块放进去还能用，但是让这堆冰块保持运行的已经是只剩下<a href="https://baike.baidu.com/item/%E7%94%B5%E6%BA%90%E7%BA%BF/8462701">电源线</a>的压缩机了</p>
+<p>————————————————————————————————————————</p>
+<p>行行行，我进游戏前不看<a href="https://baike.baidu.com/item/%E9%97%AE%E9%A2%98/1067365">问题</a>了吧</p>
+<p>当我美滋滋打开<a href="https://github.com/rongtang2026/PE-QuickJs-Engine">仓库</a>的时候</p>
+<img src="assets/issues/10b58324-cb98-4693-ad62-68a5933c2584.png" alt="Image" loading="lazy">
+
+<p>PE仓库分发的<a href="https://choosealicense.com/">开源协议</a>呢？？？？</p>
+<img src="assets/issues/affd86c2-8ac9-4e02-b92a-d72a4dbf9bd5.png" alt="Image" loading="lazy">
+
+<p>欸我去怎么在贴脸开大？？
+于是你又看向<a href="https://www.bilibili.com/">B站</a><a href="https://baike.baidu.com/item/%E5%8F%91%E8%A1%8C/9875971">宣发</a><a href="https://baike.baidu.com/item/%E8%AF%84%E8%AE%BA/32357">评论区</a></p>
+<img src="assets/issues/e6474653-4484-4f11-b2e1-b2d3ea09ae59.png" alt="Image" loading="lazy">
+
+<p>什么？被爆<a href="https://baike.baidu.com/item/%E6%BA%90%E4%BB%A3%E7%A0%81/3587471">源码</a>了？？</p>
+<img src="assets/issues/0d2485e1-5943-4c53-9b5d-d95c524f1fde.png" alt="Image" loading="lazy">
+
+<p>（speechless）</p>
+<p>哦不不不你再去看看<a href="https://github.com/rongtang2026/PE-QuickJs-Engine/issues">issue</a></p>
+<img src="assets/issues/bd4b2649-0211-40a2-bc75-6c1829a8f9ea.png" alt="Image" loading="lazy">
+
+<p>诶呀，怎么一堆<a href="https://github.com/rongtang2026/PE-QuickJs-Engine/issues">issue</a>在骂你
+于是你找了找找到了所谓的<a href="https://github.com/Lv233-Haxe/Open-QuickJs-Engine">源码</a></p>
+<img src="assets/issues/167c9d80-9a42-4c66-951f-31ee835e455b.png" alt="Image" loading="lazy">
+
+<p>好<a href="https://baike.baidu.com/item/%E5%8F%AF%E6%80%9C/67653">可怜</a>啊，不对</p>
+<img src="assets/issues/db67b5ca-9572-4f82-a260-d41865ea3b97.png" alt="Image" loading="lazy">
+
+<p>原来作者也是<a href="https://baike.baidu.com/item/%E5%85%AC%E5%85%B1%E5%85%B3%E7%B3%BB/1386">公关</a><a href="https://baike.baidu.com/item/%E9%AB%98%E6%89%8B/7261331">高手</a>啊，这么会公关</p>
+<h2><a href="https://www.gcores.com/articles/153327">第三关</a>：——————游戏运行</h2>
+<p>进来第一眼：不对啊</p>
+<img src="assets/issues/70e396d9-4aea-46f7-be21-810b94a60ad6.png" alt="Image" loading="lazy">
+
+<p>怎么<a href="https://developer.mozilla.org/zh-CN/docs/Glossary/UI">主界面</a>是PE1.0？？？？
+于是你又回去看<a href="https://baike.baidu.com/item/%E4%BB%8B%E7%BB%8D/10004448">介绍</a></p>
+<img src="assets/issues/798697c9-9c0a-4af7-a0fc-4197545e8115.png" alt="Image" loading="lazy">
+
+<p>然后<a href="https://www.zhihu.com/question/265073392">思考</a>：不对啊，那么主界面怎么回事
+（思考过程中，你看向了左下角）</p>
+<img src="assets/issues/0d916a82-43c7-48f7-99f4-5d18016d40bb.png" alt="Image" loading="lazy">
+
+<p><a href="https://github.com/FunkinCrew/Funkin">FNF</a> v 1.0.0？？！！！！</p>
+<img src="assets/issues/29a669d5-8ce0-4139-a68e-3a41c47e3788.png" alt="Image" loading="lazy">
+
+<p>（已被未来版本吓到的劳<a href="https://github.com/FunkinCrew/Funkin">BF</a>）</p>
+<p>疑似怀疑作者是否是只改了<a href="https://semver.org/lang/zh-CN/">版本号</a><a href="https://baike.baidu.com/item/%E6%9B%BF%E6%8D%A2/7715737">替换</a>导致出现的问题
+你问我有没有可能为了拿到点PE1.0的优点？</p>
+<img src="assets/issues/9dac5868-ffeb-420c-849b-ee4a99244ac4.png" alt="Image" loading="lazy">
+
+<p>哦不的不的
+还记得我说过的PE1.0吗，我怎么知道的？？</p>
+<img src="assets/issues/847eef0c-1826-4cc6-9b10-648d0b02a496.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/a391ccfe-1afb-4317-b8a5-476bd52869a0.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/8df354e2-15c9-49d3-86ad-327b102a7ac9.png" alt="Image" loading="lazy">
+
+<p>于是你吓得关上游戏，让其他issue来帮你<a href="https://baike.baidu.com/item/%E8%A1%A5%E5%85%85/2326085">补充</a></p>
+<p>#2 
+#9 </p>
+<img src="assets/issues/ffc95d63-0490-45ae-a3a7-bc05ba6a0384.png" alt="Image" loading="lazy">
+（我就这样）
+
+<h2><a href="https://www.gcores.com/articles/153327">第四关</a>：——————事后</h2>
+<img src="assets/issues/87d926f3-1dc3-4da2-8956-3559d8d0fd26.png" alt="Image" loading="lazy">
+
+<p>哦太好了作者找到<a href="https://baike.baidu.com/item/%E5%8F%8D%E9%A9%B3/4522096">反驳</a>点了
+但是你发现了疑点</p>
+<img src="assets/issues/07d5a482-ea7f-48d5-bee1-1c28f62fc8b8.png" alt="Image" loading="lazy">
+
+<p>你怎么用着<a href="https://baike.baidu.com/item/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/9180">AI</a>最傻的状态啊，不让<a href="https://developer.mozilla.org/zh-CN/docs/Learn/Common_questions/Web_mechanics/How_does_the_Internet_work">联网</a>不让思考，还是<a href="https://developer.mozilla.org/zh-CN/docs/Learn/Server-side/First_steps/Client-Server_overview">客户端</a>的</p>
+<p>我又<a href="https://baike.baidu.com/item/%E5%93%AD/2330597">急哭</a>了</p>
+<p>这里再让其他issue帮我介绍一下</p>
+<p>#6 </p>
+<p>话说回来，你的仓库怎么只在改一个readme文件啊，改了7次了都</p>
+<img src="assets/issues/69a756ac-6573-4877-9598-14c1754ef23b.png" alt="Image" loading="lazy">
+
+<p>而且为什么你还要在发布后再加上“免责声明”</p>
+<img src="assets/issues/5751ea6d-b7ff-43c2-9997-978e3956d318.png" alt="Image" loading="lazy">
+
+<p>并且批判你后你怎么还偷偷换包了</p>
+<img src="assets/issues/0ee98e3f-e516-462c-a752-1b72dee86aaf.png" alt="Image" loading="lazy">
+
+<img src="assets/issues/77385009-a45c-42f0-85cd-ca796819bd3d.png" alt="Image" loading="lazy">
+（我没招了）
+
+<p>由此可知，作者在患有</p>
+<p><a href="https://health.baidu.com/m/detail/ar_5783761498413488068#:~:text=%E8%AF%AD%E8%A8%80%E8%A1%A8%E8%BE%BE%E8%83%BD%E5%8A%9B%E5%B7%AE%E6%9C%AC%E8%BA%AB%E4%B8%8D%E6%98%AF%E4%B8%80%E7%A7%8D%E7%8B%AC%E7%AB%8B%E7%9A%84%E7%96%BE%E7%97%85%EF%BC%8C%E4%BD%86%E5%8F%AF%E8%83%BD%E6%98%AF%E6%9F%90%E4%BA%9B%E7%97%85%E7%90%86%E5%9B%A0%E7%B4%A0%E6%88%96%E5%BF%83%E7%90%86%E9%97%AE%E9%A2%98%E7%9A%84%E8%A1%A8%E7%8E%B0%EF%BC%8C%E4%B9%9F%E5%8F%AF%E8%83%BD%E6%98%AF%E5%90%8E%E5%A4%A9%E7%BC%BA%E4%B9%8F%E8%AE%AD%E7%BB%83%E5%AF%BC%E8%87%B4%E7%9A%84%E6%8A%80%E8%83%BD%E7%9F%AD%E6%9D%BF%E3%80%82%20%E6%98%AF%E5%90%A6%E5%B1%9E%E4%BA%8E%E3%80%8C%E7%97%85%E3%80%8D%E9%9C%80%E8%A6%81%E7%BB%93%E5%90%88%E4%B8%AA%E4%BD%93%E5%B9%B4%E9%BE%84%E3%80%81%E7%97%87%E7%8A%B6%E7%89%B9%E5%BE%81%E5%8F%8A%E6%88%90%E5%9B%A0%E7%BB%BC%E5%90%88%E5%88%A4%E6%96%AD%EF%BC%8C%E5%8F%AF%E9%80%9A%E8%BF%87%E4%B8%93%E4%B8%9A%E8%AF%84%E4%BC%B0%E6%98%8E%E7%A1%AE%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E5%B9%B2%E9%A2%84%E3%80%82%201.,%E7%97%85%E7%90%86%E7%9B%B8%E5%85%B3%E6%80%A7%E5%9B%A0%E7%B4%A0%20%E7%A5%9E%E7%BB%8F%E7%B3%BB%E7%BB%9F%E7%96%BE%E7%97%85%EF%BC%9A%E5%A6%82%E8%87%AA%E9%97%AD%E7%97%87%E8%B0%B1%E7%B3%BB%E9%9A%9C%E7%A2%8D%EF%BC%88%E4%BC%B4%E9%9A%8F%E7%A4%BE%E4%BA%A4%E6%B2%9F%E9%80%9A%E5%9B%B0%E9%9A%BE%EF%BC%89%E3%80%81%E8%84%91%E6%8D%9F%E4%BC%A4%E3%80%81%E5%A4%B1%E8%AF%AD%E7%97%87%E7%AD%89%EF%BC%8C%E5%8F%AF%E8%83%BD%E7%9B%B4%E6%8E%A5%E5%AF%BC%E8%87%B4%E8%AF%AD%E8%A8%80%E7%BB%84%E7%BB%87%E9%9A%9C%E7%A2%8D%E3%80%82%20%E5%90%AC%E5%8A%9B%E6%88%96%E5%8F%91%E9%9F%B3%E5%99%A8%E5%AE%98%E5%BC%82%E5%B8%B8%EF%BC%9A%E5%85%88%E5%A4%A9%E6%80%A7%E5%90%AC%E5%8A%9B%E9%9A%9C%E7%A2%8D%E6%88%96%E5%A3%B0%E5%B8%A6%E3%80%81%E5%8F%A3%E8%85%94%E7%BB%93%E6%9E%84%E9%97%AE%E9%A2%98%EF%BC%8C%E5%8F%AF%E8%83%BD%E5%BD%B1%E5%93%8D%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E5%92%8C%E8%A1%A8%E8%BE%BE%E3%80%82">!大脑语言模块萎缩!</a>
+<a href="https://baike.baidu.com/item/%E7%9B%B2%E5%AD%90/2009685">?先天&amp;后天性失明?</a>
+<a href="https://baike.baidu.com/item/%E6%A8%A1%E5%9B%A0/52705585">-重度模因污染-</a>
+<a href="https://zhuanlan.zhihu.com/p/20996286701">↓遗传性智力问题↓</a>
+<a href="https://www.cnblogs.com/pDJJq/p/18778065/llm-dependence-thinking-outsourcing-cognitive-atrophy-2irp50">↑溜溜梅严重依赖症↑</a>
+<a href="https://baike.baidu.com/item/%E8%87%AA%E5%A4%A7%E5%A6%84%E6%83%B3%E7%97%87/1285588">自大症</a>
+<a href="https://baike.baidu.com/item/%E8%A2%AB%E5%AE%B3%E5%A6%84%E6%83%B3%E7%97%87/644819">被害妄想症</a>
+<a href="https://baike.baidu.com/item/%E5%80%94%E5%BC%BA/608">城墙脸皮</a></p>
+<p>的前提下就是个大量使用溜溜梅生成AI垃圾后拉到我们脸上给我们抹匀然后不允许我们擦掉一擦掉就死命的怼我们，对自己一无所知，对AI期盼极高，拉上一堆无辜人陪葬的</p>
+<p>臭</p>
+<p>傻</p>
+<p>逼</p>
+<img src="assets/issues/e9fcc82b-6528-4103-be18-bbe3a03f00b1.png" alt="Image" loading="lazy">
+（假设，假设此时天选就是作者）
           </div>
         </details>
       </div>

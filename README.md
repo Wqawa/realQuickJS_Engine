@@ -60,7 +60,7 @@ B 站楼层按截图时间先后排好，每个数字文件夹是一位评论楼
 
 档案区是**搬运**，不是转述：
 
-- issue 正文由 `marked` 从 GitHub API 拿到的 markdown 原样渲染，标题、正文、代码块、表格、GFM alert 都不改一个字；只做排版层适配（`.issue-body` 里的一整套 markdown 样式）。
+- issue 正文取自 `engine/docs/ISSUE_ARCHIVE.md` 的快照，由 `marked` 渲染，标题、正文、代码块、表格、GFM alert 都不改一个字；只做排版层适配（`.issue-body` 里的一整套 markdown 样式）。原仓库的 issue 已删除，这份快照是抓取时留下的完整版。
 - 图片路径从 `images/xxx` 换成本地 `assets/issues/xxx`，除此之外不动。
 - 文件名里带 `%` 的两张（`LICENSE%20FILES-0-critical.png`、`HYPOCRISY-100%25-critical.png`）在磁盘上是字面量文件名，所以 HTML 里写成 `%2520` / `%2525`，浏览器请求时才是正确的一次性解码。
 - B 站那段按原帖顺序保留文字段、图片、时间戳（`00:06` 之类），不重排语义。
