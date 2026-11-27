@@ -61,22 +61,6 @@
     Array.prototype.forEach.call(revealables, function (el) { el.classList.add('is-in'); });
   }
 
-  /* ---------- 导航高亮 ---------- */
-  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav a[data-nav]'));
-  var sections = navLinks.map(function (a) { return document.getElementById(a.getAttribute('data-nav')); }).filter(Boolean);
-
-  if ('IntersectionObserver' in window && sections.length) {
-    var spy = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        navLinks.forEach(function (a) {
-          a.classList.toggle('is-active', a.getAttribute('data-nav') === entry.target.id);
-        });
-      });
-    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
-    sections.forEach(function (s) { spy.observe(s); });
-  }
-
   /* ---------- 侧边目录高亮 ---------- */
   var railLinks = Array.prototype.slice.call(document.querySelectorAll('.section-rail a[data-rail]'));
   var railTargets = railLinks.map(function (a) { return document.getElementById(a.getAttribute('data-rail')); }).filter(Boolean);

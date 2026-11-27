@@ -21,18 +21,6 @@
       <span class="brand-mark" aria-hidden="true">RQ</span>
       <span class="brand-text">RealQuickJS<span class="brand-slash">/</span>Engine</span>
     </a>
-    <nav class="nav" aria-label="主导航">
-      <a href="#features" data-nav="features">特性</a>
-      <a href="#engines" data-nav="engines">引擎</a>
-      <a href="#notes" data-nav="notes">兼容</a>
-      <a href="#download" data-nav="download">下载</a>
-      <a href="#docs" data-nav="docs">文档</a>
-      <a href="#upstream" data-nav="upstream">上游</a>
-      <a href="#community" data-nav="community">参与</a>
-      <a href="#pillory" data-nav="pillory">处刑</a>
-      <a href="#build" data-nav="build">本体</a>
-      <a href="#archive" data-nav="archive">档案</a>
-    </nav>
     <div class="topbar-actions">
       <a class="ghost-btn" href="https://github.com/Wqawa/FNF-PE_RealQuickJs_Engine" target="_blank" rel="noopener">
         GitHub <span aria-hidden="true">↗</span>
@@ -56,6 +44,9 @@
     <a class="rail-sub" href="#f-version" data-rail="f-version">版本后缀</a>
     <a class="rail-sub" href="#f-crash" data-rail="f-crash">崩溃屏</a>
     <a class="rail-sub" href="#f-isolation" data-rail="f-isolation">脚本隔离</a>
+    <a class="rail-sub" href="#f-api" data-rail="f-api">宿主函数</a>
+    <a class="rail-sub" href="#f-f3" data-rail="f-f3">F3 统计</a>
+    <a class="rail-sub" href="#f-mods" data-rail="f-mods">脚本归属</a>
     <a href="#engines" data-rail="engines">02 <span>引擎</span></a>
     <a href="#notes" data-rail="notes">03 <span>兼容</span></a>
     <a href="#download" data-rail="download">04 <span>下载</span></a>
@@ -135,7 +126,7 @@
       <header class="section-head" data-reveal>
         <span class="section-index">01</span>
         <h2 class="section-title">特性</h2>
-        <p class="section-note">六件事，短说。</p>
+        <p class="section-note">九件事，短说。</p>
       </header>
 
       <ol class="feature-list">
@@ -143,7 +134,7 @@
           <span class="feature-num" aria-hidden="true">01</span>
           <div class="feature-main">
             <h3>三套引擎，一个 exe</h3>
-            <p><code>body</code>、<code>vanilla</code>、<code>pe063</code> 三棵树编在一起。选项里选完写进 <code>engine.txt</code>，下次启动走各自的源码、素材和 mods 目录。</p>
+            <p><code>body</code>、<code>vanilla</code>、<code>pe063</code> 三棵树编在一起。选项写进 <code>engine.txt</code> 后重启生效；文件读 exe 旁那一份，再退回当前目录，内容不是这三个词就按 <code>body</code> 启动。</p>
           </div>
           <span class="feature-tag" aria-hidden="true">engine.txt</span>
         </li>
@@ -159,7 +150,7 @@
           <span class="feature-num" aria-hidden="true">03</span>
           <div class="feature-main">
             <h3>真 JS，不是转译</h3>
-            <p>在 <code>Gameplay Settings → JS Engine</code> 选 QuickJS，<code>.js</code> 就交给 QuickJS-NG：一个文件一个 context，一首歌结束回收。默认的 Troll 仍走原来的 Lua 转译。</p>
+            <p>在 <code>Gameplay Settings → JS Engine</code> 选 QuickJS，<code>.js</code> 直接交给 QuickJS-NG：一个文件一个 context，最多 64 个，共用 256MB；一首歌结束全部回收。默认的 Troll 仍走 Lua 转译。</p>
           </div>
           <span class="feature-tag" aria-hidden="true">quickjs-ng</span>
         </li>
@@ -167,7 +158,7 @@
           <span class="feature-num" aria-hidden="true">04</span>
           <div class="feature-main">
             <h3>按文件名改版本</h3>
-            <p>脚本名加 <code>(%run_v_0.6.3)</code>，只有这个脚本读到的 <code>version</code> 变成 0.6.3，其余不受影响。HScript 也能用。</p>
+            <p>脚本名加 <code>(%run_v_0.6.3)</code>，只有这个脚本读到的 <code>version</code> 变成 0.6.3。标题、Discord 状态和日志仍报真实版本。HScript 也能用。</p>
           </div>
           <span class="feature-tag" aria-hidden="true">%run_v_0.6.3</span>
         </li>
@@ -175,7 +166,7 @@
           <span class="feature-num" aria-hidden="true">05</span>
           <div class="feature-main">
             <h3>统一的崩溃屏</h3>
-            <p>错误先写进 <code>crash/PsychEngine_&lt;时间&gt;.txt</code>，再进崩溃屏。<code>QUIT</code> 退出，<code>MAIN MENU</code> 或 <code>M</code>/<code>ESC</code> 回当前侧主菜单。</p>
+            <p>错误先写进 <code>crash/PsychEngine_&lt;时间&gt;.txt</code>，再进崩溃屏。<code>C</code> 或 COPY 按钮复制全文，<code>QUIT</code> 退出，<code>MAIN MENU</code> 回当前侧主菜单。</p>
           </div>
           <span class="feature-tag" aria-hidden="true">crash/</span>
         </li>
@@ -183,9 +174,33 @@
           <span class="feature-num" aria-hidden="true">06</span>
           <div class="feature-main">
             <h3>脚本不串味</h3>
-            <p>三棵树的 <code>Paths</code> 和 import 别名各自带前缀，同名 <code>scripts/</code> 不会互相顶掉。修过哪几处写在 <code>docs/SCRIPT_ISOLATION_AUDIT.md</code>。</p>
+            <p>三棵树的 <code>Paths</code> 和 import 别名各自带前缀。mod 放在 <code>mods/&lt;侧名&gt;/&lt;mod名&gt;/</code>；判重走小写斜杠路径，Windows 下同一脚本不会因为大小写被加载两次。</p>
           </div>
           <span class="feature-tag" aria-hidden="true">isolation</span>
+        </li>
+        <li class="feature-row" id="f-api" data-reveal>
+          <span class="feature-num" aria-hidden="true">07</span>
+          <div class="feature-main">
+            <h3>JS 能直接调宿主函数</h3>
+            <p><code>QuickJSHandler.hx</code> 注册了 261 个 <code>globalThis</code> 函数，覆盖 mod 设置、成就、翻译、Discord 状态和 shader。调用统一收进 C 侧那一个入口。</p>
+          </div>
+          <span class="feature-tag" aria-hidden="true">globalThis</span>
+        </li>
+        <li class="feature-row" id="f-f3" data-reveal>
+          <span class="feature-num" aria-hidden="true">08</span>
+          <div class="feature-main">
+            <h3>F3 分页看耗时</h3>
+            <p><code>F3</code> 循环五页：帧率、游戏状态、每个脚本的耗时和调用次数、纹理。滚轮翻看长列表，代码在 <code>debug/FPSCounter.hx</code>。</p>
+          </div>
+          <span class="feature-tag" aria-hidden="true">F3</span>
+        </li>
+        <li class="feature-row" id="f-mods" data-reveal>
+          <span class="feature-num" aria-hidden="true">09</span>
+          <div class="feature-main">
+            <h3>脚本归属认得清</h3>
+            <p><code>Paths.modFromScriptPath()</code> 从路径反查脚本属于哪个 mod，<code>mods/&lt;侧&gt;/scripts/</code> 算全局目录，不当成 mod。</p>
+          </div>
+          <span class="feature-tag" aria-hidden="true">modFromScriptPath</span>
         </li>
       </ol>
     </div>
